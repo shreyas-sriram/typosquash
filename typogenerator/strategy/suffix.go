@@ -50,6 +50,7 @@ func init() {
 	Suffix = &suffixStrategy{
 		suffixes: []string{
 			// TODO - add more suffixes
+			// Find a way to add `s`, `es` and other plural forms.
 
 			// For suffix `x`, candidates should be generated as:
 			// 		foox, foo.x, foo-x, foo_x
@@ -65,7 +66,7 @@ func init() {
 			"core",
 			"http",
 			"contrib",
-			".env",
+			"env",
 			"javascript",
 			"node",
 			"lib",
@@ -83,6 +84,7 @@ func init() {
 			"ruby",
 			"adapter",
 			"main",
+			"util",
 		},
 
 		connectors: []string{
