@@ -27,36 +27,48 @@ type substituteConnectorStrategy struct {
 
 // -----------------------------------------------------------------------------
 
-// TODO - do this recursively to cover all permutations
 func (s *substituteConnectorStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
+	res = s.permute(res, 0, domain)
 
-	for i := 1; i < len(domain)-1; i++ {
-		switch domain[i] {
+	// remove the primary domain from the the list of candidates
+	if len(res) > 0 {
+		res = res[:len(res)-1]
+	}
+
+	return res, nil
+}
+
+func (s *substituteConnectorStrategy) permute(permutations []string, index int, curr string) []string {
+	if index == len(curr)-1 {
+		permutations = append(permutations, curr)
+		return permutations
+	}
+
+	for i := index; i < len(curr)-1; i++ {
+		switch curr[i] {
 		case '.':
 			for _, connector := range s.connectors['.'] {
-				fuzzed := fmt.Sprintf("%s%s%s", domain[:i], connector, domain[i+1:])
-				fuzzed = combineTLD(fuzzed, tld)
-				res = append(res, fuzzed)
+				tmp := fmt.Sprintf("%s%s%s", curr[:i], connector, curr[i+1:])
+				permutations = s.permute(permutations, i+1, tmp)
 			}
 
 		case '-':
 			for _, connector := range s.connectors['-'] {
-				fuzzed := fmt.Sprintf("%s%s%s", domain[:i], connector, domain[i+1:])
-				fuzzed = combineTLD(fuzzed, tld)
-				res = append(res, fuzzed)
+				tmp := fmt.Sprintf("%s%s%s", curr[:i], connector, curr[i+1:])
+				permutations = s.permute(permutations, i+1, tmp)
 			}
 
 		case '_':
 			for _, connector := range s.connectors['_'] {
-				fuzzed := fmt.Sprintf("%s%s%s", domain[:i], connector, domain[i+1:])
-				fuzzed = combineTLD(fuzzed, tld)
-				res = append(res, fuzzed)
+				tmp := fmt.Sprintf("%s%s%s", curr[:i], connector, curr[i+1:])
+				permutations = s.permute(permutations, i+1, tmp)
 			}
 		}
 	}
 
-	return res, nil
+	permutations = append(permutations, curr)
+	return permutations
 }
 
 func (s *substituteConnectorStrategy) GetName() string {
