@@ -24,15 +24,32 @@ import (
 )
 
 // TODO - write better tests
-func TestInsertConnector(t *testing.T) {
-	out, err := strategy.Hyphenation.Generate("zemithar", "")
+func TestInsertConnectorSimple(t *testing.T) {
+	out, err := strategy.InsertConnector.Generate("zenithar", "")
 	if err != nil {
 		t.Fail()
 		t.Fatal("Error should not occurs !", err)
 	}
 
-	if len(out) != 6 {
-		t.Errorf("invalid permutation count, expected %d, got %d", 6, len(out))
+	expectedCount := 21
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
+		t.FailNow()
+	}
+}
+
+func TestInsertConnectorComplex(t *testing.T) {
+	out, err := strategy.InsertConnector.Generate("zeni-thar", "")
+	if err != nil {
+		t.Fail()
+		t.Fatal("Error should not occurs !", err)
+	}
+
+	expectedCount := 18
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
 		t.FailNow()
 	}
 }
