@@ -30,7 +30,7 @@ type insertConnectorStrategy struct {
 func (s *insertConnectorStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
-	for i := 1; i < len(domain)-1; i++ {
+	for i := 1; i < len(domain); i++ {
 		r := rune(domain[i])
 		rp := rune(domain[i-1])
 		if !(r == '.' || r == '-' || r == '_') && !(rp == '.' || rp == '-' || rp == '_') {
