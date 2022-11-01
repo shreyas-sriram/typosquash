@@ -24,15 +24,62 @@ import (
 )
 
 // TODO - write better tests
-func TestSubstituteConnector(t *testing.T) {
-	out, err := strategy.Hyphenation.Generate("zemithar", "")
+func TestSubstituteConnectorNoConnectors(t *testing.T) {
+	out, err := strategy.SubstituteConnector.Generate("zenithar", "")
 	if err != nil {
 		t.Fail()
 		t.Fatal("Error should not occurs !", err)
 	}
 
-	if len(out) != 6 {
-		t.Errorf("invalid permutation count, expected %d, got %d", 6, len(out))
+	expectedCount := 0
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
+		t.FailNow()
+	}
+}
+
+func TestSubstituteConnectorOneConnector(t *testing.T) {
+	out, err := strategy.SubstituteConnector.Generate("zeni-thar", "")
+	if err != nil {
+		t.Fail()
+		t.Fatal("Error should not occurs !", err)
+	}
+
+	expectedCount := 2
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
+		t.FailNow()
+	}
+}
+
+func TestSubstituteConnectorTwoConnectors(t *testing.T) {
+	out, err := strategy.SubstituteConnector.Generate("zen-ith_ar", "")
+	if err != nil {
+		t.Fail()
+		t.Fatal("Error should not occurs !", err)
+	}
+
+	expectedCount := 8
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
+		t.FailNow()
+	}
+}
+
+func TestSubstituteConnectorThreeConnectors(t *testing.T) {
+	out, err := strategy.SubstituteConnector.Generate("ze_ni-th_ar", "")
+	if err != nil {
+		t.Fail()
+		t.Fatal("Error should not occurs !", err)
+	}
+
+	expectedCount := 26
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
 		t.FailNow()
 	}
 }
