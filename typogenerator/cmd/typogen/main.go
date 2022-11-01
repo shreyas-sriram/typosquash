@@ -63,7 +63,9 @@ func main() {
 		strategy.Replace(mapping.German),
 		strategy.DoubleHit(mapping.German),
 		strategy.Similar(mapping.German),
-		strategy.SubstituteConnector,
+		strategy.Suffix,
+    strategy.InsertConnector,
+    strategy.SubstituteConnector,
 	}
 
 	results, err := typogenerator.Fuzz(*input, all...)

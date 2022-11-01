@@ -23,14 +23,30 @@ import (
 	"zntr.io/typogenerator/strategy"
 )
 
-func TestPrefix(t *testing.T) {
-	out, err := strategy.Prefix.Generate("zenithar", "")
+// TODO - write better tests
+func TestInsertConnectorSimple(t *testing.T) {
+	out, err := strategy.InsertConnector.Generate("zenithar", "")
 	if err != nil {
 		t.Fail()
 		t.Fatal("Error should not occurs !", err)
 	}
 
-	expectedCount := 12
+	expectedCount := 21
+
+	if len(out) != expectedCount {
+		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
+		t.FailNow()
+	}
+}
+
+func TestInsertConnectorComplex(t *testing.T) {
+	out, err := strategy.InsertConnector.Generate("zeni-thar", "")
+	if err != nil {
+		t.Fail()
+		t.Fatal("Error should not occurs !", err)
+	}
+
+	expectedCount := 18
 
 	if len(out) != expectedCount {
 		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))

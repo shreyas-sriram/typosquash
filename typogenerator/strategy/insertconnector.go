@@ -19,46 +19,42 @@ package strategy
 
 import "fmt"
 
-var Prefix Strategy
+var InsertConnector Strategy
 
-type prefixStrategy struct {
-	prefixes []string
+type insertConnectorStrategy struct {
+	connectors []string
 }
 
 // -----------------------------------------------------------------------------
 
-func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
+func (s *insertConnectorStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
-	for _, prefix := range s.prefixes {
-		fuzzed := fmt.Sprintf("%s%s", prefix, domain)
-		fuzzed = combineTLD(fuzzed, tld)
-		res = append(res, fuzzed)
+	for i := 1; i < len(domain); i++ {
+		r := rune(domain[i])
+		rp := rune(domain[i-1])
+		if !(r == '.' || r == '-' || r == '_') && !(rp == '.' || rp == '-' || rp == '_') {
+			for _, connector := range s.connectors {
+				fuzzed := fmt.Sprintf("%s%s%s", domain[:i], connector, domain[i:])
+				fuzzed = combineTLD(fuzzed, tld)
+				res = append(res, fuzzed)
+			}
+		}
 	}
 
 	return res, nil
 }
 
-func (s *prefixStrategy) GetName() string {
-	return "Prefix"
+func (s *insertConnectorStrategy) GetName() string {
+	return "InsertConnector"
 }
 
 func init() {
-	Prefix = &prefixStrategy{
-		// TODO - add more prefixes
-		prefixes: []string{
-			"py-",
-			"py",
-			"js-",
-			"js",
-			"node-",
-			"jq-",
-			"async-",
-			"dev-",
-			"cli-",
-			"easy-",
-			"fast-",
-			"api-",
+	InsertConnector = &insertConnectorStrategy{
+		connectors: []string{
+			".",
+			"-",
+			"_",
 		},
 	}
 }
