@@ -58,6 +58,7 @@ func init() {
 			"cli-",
 			"easy-",
 			"fast-",
+			"api-",
 		},
 	}
 }
