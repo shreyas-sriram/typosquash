@@ -22,8 +22,9 @@ import "fmt"
 var Suffix Strategy
 
 type suffixStrategy struct {
-	suffixes   []string
-	connectors []string
+	suffixes       []string
+	simpleSuffixes []string
+	connectors     []string
 }
 
 // -----------------------------------------------------------------------------
@@ -37,6 +38,12 @@ func (s *suffixStrategy) Generate(domain, tld string) ([]string, error) {
 			fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
+	}
+
+	for _, suffix := range s.simpleSuffixes {
+		fuzzed := fmt.Sprintf("%s%s", domain, suffix)
+		fuzzed = combineTLD(fuzzed, tld)
+		res = append(res, fuzzed)
 	}
 
 	return res, nil
@@ -92,6 +99,12 @@ func init() {
 			".",
 			"-",
 			"_",
+		},
+
+		simpleSuffixes: []string{
+			"s",
+			"es",
+			"x",
 		},
 	}
 }
