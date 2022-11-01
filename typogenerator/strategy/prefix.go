@@ -49,9 +49,12 @@ func init() {
 		prefixes: []string{
 			"py-",
 			"py",
+			"python-",
+			"python3-",
 			"js-",
 			"js",
 			"node-",
+			"node",
 			"jq-",
 			"async-",
 			"dev-",
@@ -59,6 +62,11 @@ func init() {
 			"easy-",
 			"fast-",
 			"api-",
+			"app-",
+			"app_",
+			"ruby_",
+			"crypto",
+			"io-",
 		},
 	}
 }

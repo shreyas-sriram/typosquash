@@ -53,11 +53,12 @@ func (s *substituteWordStrategy) GetName() string {
 func init() {
 	SubstituteWord = &substituteWordStrategy{
 		similarWords: map[string][]string{
-			"python": {"python2", "python3"},
+			"python": {"", "python2", "python3"},
+			"hash":   {"", "crypto"},
 
 			// TODO - add other words
 			// "y": {"ies"},
-			// "_": {".", "-"},
+			// "s": {""},
 		},
 	}
 }

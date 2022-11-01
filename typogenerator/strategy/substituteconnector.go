@@ -78,9 +78,9 @@ func (s *substituteConnectorStrategy) GetName() string {
 func init() {
 	SubstituteConnector = &substituteConnectorStrategy{
 		connectors: map[rune][]string{
-			'.': {"-", "_"},
-			'-': {".", "_"},
-			'_': {".", "-"},
+			'.': {"", "-", "_"},
+			'-': {"", ".", "_"},
+			'_': {"", ".", "-"},
 		},
 	}
 }
