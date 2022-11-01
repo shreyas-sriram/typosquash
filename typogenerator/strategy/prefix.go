@@ -45,29 +45,20 @@ func (s *prefixStrategy) GetName() string {
 
 func init() {
 	Prefix = &prefixStrategy{
+		// TODO - add more prefixes
 		prefixes: []string{
-			"www",
-			"www-",
-			"mail",
-			"mail-",
-			"login",
-			"login-",
-			"auth",
-			"auth-",
-			"ftp",
-			"ftp-",
-			"smtp",
-			"smtp-",
-			"imap",
-			"imap-",
-			"account",
-			"account-",
-			"accounts",
-			"accounts-",
-			"users",
-			"users-",
-			"sso",
-			"sso-",
+			"py-",
+			"py",
+			"js-",
+			"js",
+			"node-",
+			"jq-",
+			"async-",
+			"dev-",
+			"cli-",
+			"easy-",
+			"fast-",
+			"api-",
 		},
 	}
 }

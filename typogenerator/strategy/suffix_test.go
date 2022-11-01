@@ -23,14 +23,15 @@ import (
 	"zntr.io/typogenerator/strategy"
 )
 
-func TestPrefix(t *testing.T) {
-	out, err := strategy.Prefix.Generate("zenithar", "")
+// TODO - write better tests
+func TestSuffix(t *testing.T) {
+	out, err := strategy.Suffix.Generate("zenithar", "")
 	if err != nil {
 		t.Fail()
 		t.Fatal("Error should not occurs !", err)
 	}
 
-	expectedCount := 12
+	expectedCount := 127
 
 	if len(out) != expectedCount {
 		t.Errorf("invalid permutation count, expected %d, got %d", expectedCount, len(out))
