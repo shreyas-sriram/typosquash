@@ -64,6 +64,7 @@ func main() {
 		strategy.DoubleHit(mapping.German),
 		strategy.Similar(mapping.German),
 		strategy.Suffix,
+    strategy.InsertConnector,
 	}
 
 	results, err := typogenerator.Fuzz(*input, all...)
