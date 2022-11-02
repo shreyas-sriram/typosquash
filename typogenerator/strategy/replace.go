@@ -42,7 +42,7 @@ func (s *replaceStrategy) Generate(domain, tld string) ([]string, error) {
 
 	dom := []rune(domain)
 
-	for i := 0; i < len(dom)-1; i++ {
+	for i := 0; i < len(dom); i++ {
 		keys := s._mapping.GetMapping(dom[i])
 		if len(keys) > 0 {
 			for _, c := range keys {
