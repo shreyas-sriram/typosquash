@@ -22,7 +22,8 @@ import "fmt"
 var Prefix Strategy
 
 type prefixStrategy struct {
-	prefixes []string
+	prefixes   []string
+	connectors []string
 }
 
 // -----------------------------------------------------------------------------
@@ -31,9 +32,11 @@ func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
 	for _, prefix := range s.prefixes {
-		fuzzed := fmt.Sprintf("%s%s", prefix, domain)
-		fuzzed = combineTLD(fuzzed, tld)
-		res = append(res, fuzzed)
+		for _, connector := range s.connectors {
+			fuzzed := fmt.Sprintf("%s%s%s", prefix, connector, domain)
+			fuzzed = combineTLD(fuzzed, tld)
+			res = append(res, fuzzed)
+		}
 	}
 
 	return res, nil
@@ -47,18 +50,31 @@ func init() {
 	Prefix = &prefixStrategy{
 		// TODO - add more prefixes
 		prefixes: []string{
-			"py-",
 			"py",
-			"js-",
+			"python",
+			"python3",
 			"js",
-			"node-",
-			"jq-",
-			"async-",
-			"dev-",
-			"cli-",
-			"easy-",
-			"fast-",
-			"api-",
+			"node",
+			"jq",
+			"async",
+			"dev",
+			"cli",
+			"easy",
+			"fast",
+			"api",
+			"app",
+			"ruby",
+			"crypto",
+			"io",
+			"db",
+			"stream",
+		},
+
+		connectors: []string{
+			"",
+			".",
+			"-",
+			"_",
 		},
 	}
 }
