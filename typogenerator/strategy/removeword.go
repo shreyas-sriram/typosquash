@@ -17,47 +17,36 @@
 
 package strategy
 
-import "regexp"
+import "fmt"
 
-var SubstituteWord Strategy
+var RemoveWord Strategy
 
-type substituteWordStrategy struct {
-	similarWords map[string][]string
-}
+type removeWordStrategy struct{}
 
 // -----------------------------------------------------------------------------
 
-func (s *substituteWordStrategy) Generate(domain, tld string) ([]string, error) {
+func (s *removeWordStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
-	for word, similarWords := range s.similarWords {
-		re := regexp.MustCompile(word)
-
-		for _, similarWord := range similarWords {
-			fuzzed := re.ReplaceAllString(domain, similarWord)
+	for i := 0; i < len(domain)-1; i++ {
+		if domain[i] == '.' || domain[i] == '-' || domain[i] == '_' {
+			fuzzed := fmt.Sprintf("%s", domain[:i])
 			fuzzed = combineTLD(fuzzed, tld)
+			res = append(res, fuzzed)
 
-			if fuzzed != domain {
-				res = append(res, fuzzed)
-			}
+			fuzzed = fmt.Sprintf("%s", domain[i+1:])
+			fuzzed = combineTLD(fuzzed, tld)
+			res = append(res, fuzzed)
 		}
 	}
 
 	return res, nil
 }
 
-func (s *substituteWordStrategy) GetName() string {
-	return "SubstituteWord"
+func (s *removeWordStrategy) GetName() string {
+	return "RemoveWord"
 }
 
 func init() {
-	SubstituteWord = &substituteWordStrategy{
-		similarWords: map[string][]string{
-			"python": {"", "python2", "python3"},
-			"hash":   {"", "crypto"},
-
-			// TODO - add other words
-			// "color": {"colour"},
-		},
-	}
+	RemoveWord = &removeWordStrategy{}
 }

@@ -24,7 +24,7 @@ with open('dataset.csv') as csv_file:
             # print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
         line_count += 1
 
-dict(sorted(dataset.items()))
+dataset = dict(sorted(dataset.items()))
 
 # print(json.dumps(dataset, indent=1))
 print(f'Found {len(dataset)} typosquatting victims from the dataset.')
@@ -55,6 +55,7 @@ for victim, attackers in dataset.items():
 script_end_time = datetime.now()
 
 print(f'Missed: {missed} of total: {line_count - 1}')
-print(f'Miss percentage: {missed/line_count - 1}')
+print(f'Miss percentage: {missed / (line_count - 1) * 100}')
 print(f'Duration: {script_end_time - script_start_time}')
-print(f'Missed candidates:\n{missed_candidates_text}')
+print(f'Missed candidates:')
+print('\n'.join(missed_candidates_text))

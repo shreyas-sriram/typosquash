@@ -98,6 +98,7 @@ func init() {
 			"cms",
 			"crypto",
 			"io",
+			"db",
 		},
 
 		connectors: []string{
