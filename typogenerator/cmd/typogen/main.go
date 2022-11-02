@@ -66,6 +66,7 @@ func main() {
 		strategy.Suffix,
 		strategy.InsertConnector,
 		strategy.RemoveWord,
+		strategy.SwapWord,
 	}
 
 	results, err := typogenerator.Fuzz(*input, all...)
