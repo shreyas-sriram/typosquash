@@ -34,10 +34,17 @@ import (
 var (
 	input           = flag.String("s", "zenithar", "Defines string to alternate")
 	permutationOnly = flag.Bool("p", false, "Display permutted domain only")
+
+	registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
 )
 
 func init() {
 	flag.Parse()
+
+	if !(*registry == "pypi" || *registry == "rubygems" || *registry == "npm") {
+		fmt.Println("Registry can be one of - rubygems, pypi, npm")
+		os.Exit(1)
+	}
 }
 
 func main() {
@@ -76,6 +83,16 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
+	validPackages := []string{}
+
+	for _, r := range results {
+		for _, p := range r.Permutations {
+			if typogenerator.Exists(p, *registry) {
+				validPackages = append(validPackages, p)
+			}
+		}
+	}
+
 	if !*permutationOnly {
 		writer := gocsv.NewWriter(os.Stdout)
 		writer.QuoteFields = true
@@ -95,10 +112,8 @@ func main() {
 			}
 		}
 	} else {
-		for _, r := range results {
-			for _, p := range r.Permutations {
-				fmt.Println(p)
-			}
+		for _, p := range validPackages {
+			fmt.Println(p)
 		}
 	}
 }
