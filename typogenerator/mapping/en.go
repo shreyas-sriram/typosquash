@@ -62,6 +62,10 @@ func init() {
 			'0': {'9', 'p', 'o', '-'},
 			'-': {'0', 'p'},
 		},
-		similar: map[rune][]rune{},
+		similar: map[rune][]rune{
+			'i': {'l', 'y'},
+			'l': {'i'},
+			'y': {'i'},
+		},
 	}
 }

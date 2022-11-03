@@ -19,21 +19,18 @@ package strategy
 
 import "fmt"
 
-var Prefix Strategy
+var SwapWord Strategy
 
-type prefixStrategy struct {
-	prefixes   []string
-	connectors []string
-}
+type swapWordStrategy struct{}
 
 // -----------------------------------------------------------------------------
 
-func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
+func (s *swapWordStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
-	for _, prefix := range s.prefixes {
-		for _, connector := range s.connectors {
-			fuzzed := fmt.Sprintf("%s%s%s", prefix, connector, domain)
+	for i := 0; i < len(domain)-1; i++ {
+		if domain[i] == '.' || domain[i] == '-' || domain[i] == '_' {
+			fuzzed := fmt.Sprintf("%s%s%s", domain[i+1:], string(domain[i]), domain[:i])
 			fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
@@ -42,39 +39,10 @@ func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
 	return res, nil
 }
 
-func (s *prefixStrategy) GetName() string {
-	return "Prefix"
+func (s *swapWordStrategy) GetName() string {
+	return "swapWord"
 }
 
 func init() {
-	Prefix = &prefixStrategy{
-		// TODO - add more prefixes
-		prefixes: []string{
-			"py",
-			"python",
-			"python3",
-			"js",
-			"node",
-			"jq",
-			"async",
-			"dev",
-			"cli",
-			"easy",
-			"fast",
-			"api",
-			"app",
-			"ruby",
-			"crypto",
-			"io",
-			"db",
-			"stream",
-		},
-
-		connectors: []string{
-			"",
-			".",
-			"-",
-			"_",
-		},
-	}
+	SwapWord = &swapWordStrategy{}
 }
