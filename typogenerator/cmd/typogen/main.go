@@ -27,7 +27,6 @@ import (
 	"golang.org/x/net/idna"
 
 	"zntr.io/typogenerator"
-	"zntr.io/typogenerator/mapping"
 	"zntr.io/typogenerator/strategy"
 )
 
@@ -42,19 +41,21 @@ func init() {
 
 func main() {
 	all := []strategy.Strategy{
-		strategy.Omission,
-		strategy.Repetition,
-		strategy.Transposition,
-		strategy.Prefix,
-		strategy.VowelSwap,
-		strategy.Replace(mapping.English),
-		strategy.DoubleHit(mapping.English),
-		strategy.Similar(mapping.English),
-		strategy.Suffix,
-		strategy.InsertConnector,
-		strategy.SubstituteConnector,
-    strategy.RemoveWord,
-		strategy.SwapWord,
+		// strategy.Omission,
+		// strategy.Repetition,
+		// strategy.Transposition,
+		// strategy.Prefix,
+		// strategy.VowelSwap,
+		// strategy.Replace(mapping.English),
+		// strategy.DoubleHit(mapping.English),
+		// strategy.Similar(mapping.English),
+		// strategy.Suffix,
+		// strategy.InsertConnector,
+		// strategy.SubstituteConnector,
+		// strategy.RemoveWord,
+		// strategy.SwapWord,
+
+		strategy.Combine([]strategy.Strategy{strategy.RemoveWord, strategy.Suffix}),
 
 		// strategy.Addition,
 		// strategy.BitSquatting,
