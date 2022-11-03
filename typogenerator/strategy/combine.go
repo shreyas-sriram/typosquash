@@ -17,56 +17,50 @@
 
 package strategy
 
-import (
-	"strings"
-)
+type combineStrategy struct {
+	strategies []Strategy
+}
 
-var SubstituteWord Strategy
-
-type substituteWordStrategy struct {
-	similarWords map[string][]string
+func Combine(strategies []Strategy) Strategy {
+	return &combineStrategy{
+		strategies: strategies,
+	}
 }
 
 // -----------------------------------------------------------------------------
 
-func (s *substituteWordStrategy) Generate(domain, tld string) ([]string, error) {
-	res := []string{}
+func (s *combineStrategy) Generate(domain, tld string) ([]string, error) {
+	res := []string{domain}
 
-	for word, similarWords := range s.similarWords {
-
-		for _, similarWord := range similarWords {
-			fuzzed := strings.ReplaceAll(domain, word, similarWord)
-			fuzzed = combineTLD(fuzzed, tld)
-
-			if fuzzed != domain {
-				res = append(res, fuzzed)
-			}
+	for _, strategy := range s.strategies {
+		domains := []string{}
+		for _, d := range res {
+			fuzzed, _ := fuzz(d, strategy)
+			domains = append(domains, fuzzed...)
 		}
+		res = domains
 	}
 
 	return res, nil
 }
 
-func (s *substituteWordStrategy) GetName() string {
-	return "SubstituteWord"
+func (s *combineStrategy) GetName() string {
+	return "Combine"
 }
 
-func init() {
-	SubstituteWord = &substituteWordStrategy{
-		similarWords: map[string][]string{
-<<<<<<< HEAD
-			"python": {"", "python2", "python3"},
-			"hash":   {"", "crypto"},
+func fuzz(domain string, strategy Strategy) ([]string, error) {
+	res := []string{}
+	var err error
 
-			// TODO - add other words
-			// "color": {"colour"},
-=======
-			"python": {"python2", "python3"},
+	if strategy != nil {
+		domains, err := strategy.Generate(domain, "")
+		if err != nil {
+			return []string{}, err
+		}
 
-			// TODO - add other words
-			// "y": {"ies"},
-			// "_": {".", "-"},
->>>>>>> main
-		},
+		// Add result
+		res = append(res, domains...)
 	}
+
+	return res, err
 }

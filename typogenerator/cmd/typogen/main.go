@@ -57,6 +57,8 @@ func main() {
 		strategy.RemoveWord,
 		strategy.SwapWord,
 
+		strategy.Combine([]strategy.Strategy{strategy.RemoveWord, strategy.Omission}),
+
 		// strategy.Addition,
 		// strategy.BitSquatting,
 		// strategy.Homoglyph,
