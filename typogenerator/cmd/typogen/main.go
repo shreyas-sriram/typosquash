@@ -52,6 +52,7 @@ func main() {
 		strategy.Similar(mapping.English),
 		strategy.Suffix,
 		strategy.InsertConnector,
+		strategy.SubstituteWord,
 		strategy.SubstituteConnector,
 		strategy.RemoveWord,
 		strategy.SwapWord,
