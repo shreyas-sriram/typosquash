@@ -19,21 +19,22 @@ package strategy
 
 import "fmt"
 
-var Prefix Strategy
+var RemoveWord Strategy
 
-type prefixStrategy struct {
-	prefixes   []string
-	connectors []string
-}
+type removeWordStrategy struct{}
 
 // -----------------------------------------------------------------------------
 
-func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
+func (s *removeWordStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{}
 
-	for _, prefix := range s.prefixes {
-		for _, connector := range s.connectors {
-			fuzzed := fmt.Sprintf("%s%s%s", prefix, connector, domain)
+	for i := 0; i < len(domain)-1; i++ {
+		if domain[i] == '.' || domain[i] == '-' || domain[i] == '_' {
+			fuzzed := fmt.Sprintf("%s", domain[:i])
+			fuzzed = combineTLD(fuzzed, tld)
+			res = append(res, fuzzed)
+
+			fuzzed = fmt.Sprintf("%s", domain[i+1:])
 			fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
@@ -42,39 +43,10 @@ func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
 	return res, nil
 }
 
-func (s *prefixStrategy) GetName() string {
-	return "Prefix"
+func (s *removeWordStrategy) GetName() string {
+	return "RemoveWord"
 }
 
 func init() {
-	Prefix = &prefixStrategy{
-		// TODO - add more prefixes
-		prefixes: []string{
-			"py",
-			"python",
-			"python3",
-			"js",
-			"node",
-			"jq",
-			"async",
-			"dev",
-			"cli",
-			"easy",
-			"fast",
-			"api",
-			"app",
-			"ruby",
-			"crypto",
-			"io",
-			"db",
-			"stream",
-		},
-
-		connectors: []string{
-			"",
-			".",
-			"-",
-			"_",
-		},
-	}
+	RemoveWord = &removeWordStrategy{}
 }

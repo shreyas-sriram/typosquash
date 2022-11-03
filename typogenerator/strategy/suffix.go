@@ -79,6 +79,7 @@ func init() {
 			"lib",
 			"web3",
 			"python",
+			"python3",
 			"api",
 			"proxy",
 			"plugin",
@@ -92,6 +93,12 @@ func init() {
 			"adapter",
 			"main",
 			"util",
+			"app",
+			"ruby",
+			"cms",
+			"crypto",
+			"io",
+			"db",
 		},
 
 		connectors: []string{

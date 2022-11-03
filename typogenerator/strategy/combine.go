@@ -17,64 +17,50 @@
 
 package strategy
 
-import "fmt"
+type combineStrategy struct {
+	strategies []Strategy
+}
 
-var Prefix Strategy
-
-type prefixStrategy struct {
-	prefixes   []string
-	connectors []string
+func Combine(strategies []Strategy) Strategy {
+	return &combineStrategy{
+		strategies: strategies,
+	}
 }
 
 // -----------------------------------------------------------------------------
 
-func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
-	res := []string{}
+func (s *combineStrategy) Generate(domain, tld string) ([]string, error) {
+	res := []string{domain}
 
-	for _, prefix := range s.prefixes {
-		for _, connector := range s.connectors {
-			fuzzed := fmt.Sprintf("%s%s%s", prefix, connector, domain)
-			fuzzed = combineTLD(fuzzed, tld)
-			res = append(res, fuzzed)
+	for _, strategy := range s.strategies {
+		domains := []string{}
+		for _, d := range res {
+			fuzzed, _ := fuzz(d, strategy)
+			domains = append(domains, fuzzed...)
 		}
+		res = domains
 	}
 
 	return res, nil
 }
 
-func (s *prefixStrategy) GetName() string {
-	return "Prefix"
+func (s *combineStrategy) GetName() string {
+	return "Combine"
 }
 
-func init() {
-	Prefix = &prefixStrategy{
-		// TODO - add more prefixes
-		prefixes: []string{
-			"py",
-			"python",
-			"python3",
-			"js",
-			"node",
-			"jq",
-			"async",
-			"dev",
-			"cli",
-			"easy",
-			"fast",
-			"api",
-			"app",
-			"ruby",
-			"crypto",
-			"io",
-			"db",
-			"stream",
-		},
+func fuzz(domain string, strategy Strategy) ([]string, error) {
+	res := []string{}
+	var err error
 
-		connectors: []string{
-			"",
-			".",
-			"-",
-			"_",
-		},
+	if strategy != nil {
+		domains, err := strategy.Generate(domain, "")
+		if err != nil {
+			return []string{}, err
+		}
+
+		// Add result
+		res = append(res, domains...)
 	}
+
+	return res, err
 }
