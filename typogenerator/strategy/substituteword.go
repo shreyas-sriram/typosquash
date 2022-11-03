@@ -17,7 +17,9 @@
 
 package strategy
 
-import "regexp"
+import (
+	"strings"
+)
 
 var SubstituteWord Strategy
 
@@ -31,10 +33,9 @@ func (s *substituteWordStrategy) Generate(domain, tld string) ([]string, error) 
 	res := []string{}
 
 	for word, similarWords := range s.similarWords {
-		re := regexp.MustCompile(word)
 
 		for _, similarWord := range similarWords {
-			fuzzed := re.ReplaceAllString(domain, similarWord)
+			fuzzed := strings.ReplaceAll(domain, word, similarWord)
 			fuzzed = combineTLD(fuzzed, tld)
 
 			if fuzzed != domain {
