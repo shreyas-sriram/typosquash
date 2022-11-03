@@ -53,8 +53,10 @@ func main() {
 		strategy.Suffix,
 		strategy.InsertConnector,
 		strategy.SubstituteConnector,
-    strategy.RemoveWord,
+		strategy.RemoveWord,
 		strategy.SwapWord,
+
+		strategy.Combine([]strategy.Strategy{strategy.RemoveWord, strategy.Omission}),
 
 		// strategy.Addition,
 		// strategy.BitSquatting,
