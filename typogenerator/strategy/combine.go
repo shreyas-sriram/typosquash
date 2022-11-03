@@ -35,7 +35,12 @@ func (s *combineStrategy) Generate(domain, tld string) ([]string, error) {
 	res := []string{domain}
 
 	for _, strategy := range s.strategies {
-		res, _ = fuzz(res[0], strategy)
+		domains := []string{}
+		for _, d := range res {
+			fuzzed, _ := fuzz(d, strategy)
+			domains = append(domains, fuzzed...)
+		}
+		res = domains
 	}
 
 	return res, nil
@@ -49,9 +54,11 @@ func fuzz(domain string, strategy Strategy) ([]string, error) {
 	res := []string{}
 	var err error
 
-	var domains []string
 	if strategy != nil {
-		domains, err = strategy.Generate(domain, "")
+		domains, err := strategy.Generate(domain, "")
+		if err != nil {
+			return []string{}, err
+		}
 
 		// Add result
 		res = append(res, domains...)
