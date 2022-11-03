@@ -17,8 +17,6 @@
 
 package strategy
 
-// var Combine Strategy
-
 type combineStrategy struct {
 	strategies []Strategy
 }
