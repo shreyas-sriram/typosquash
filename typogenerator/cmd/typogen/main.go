@@ -35,14 +35,14 @@ import (
 var (
 	input           = flag.String("s", "zenithar", "Defines string to alternate")
 	permutationOnly = flag.Bool("p", false, "Display permutted domain only")
-
-	registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
 )
 
 func init() {
+	typogenerator.Registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
+
 	flag.Parse()
 
-	if !(*registry == "pypi" || *registry == "rubygems" || *registry == "npm") {
+	if !(*typogenerator.Registry == "pypi" || *typogenerator.Registry == "rubygems" || *typogenerator.Registry == "npm") {
 		fmt.Println("Registry can be one of - rubygems, pypi, npm")
 		os.Exit(1)
 	}
@@ -84,39 +84,7 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
-	total := 0
-	// for _, r := range results {
-	// 	total += len(r.Permutations)
-	// }
-
-	// fmt.Printf("Total: %d", total)
-	// fmt.Printf("Results: %s", results)
-
-	validPackages := []string{}
-	ch := make(chan typogenerator.Resp)
-
-	for _, r := range results {
-		total += len(r.Permutations)
-		for _, p := range r.Permutations {
-			go func(p string) {
-				// fmt.Printf("Checking: %s\n", p)
-				if typogenerator.Exists(p, *registry) {
-					ch <- typogenerator.Resp{Name: p, Valid: true}
-				} else {
-					ch <- typogenerator.Resp{Name: p, Valid: false}
-				}
-			}(p.Name)
-		}
-	}
-
-	for i := 0; i < total; i++ {
-		select {
-		case resp := <-ch:
-			if resp.Valid {
-				validPackages = append(validPackages, resp.Name)
-			}
-		}
-	}
+	validPackages := typogenerator.GetValid(results)
 
 	if !*permutationOnly {
 		writer := gocsv.NewWriter(os.Stdout)
@@ -140,7 +108,7 @@ func main() {
 		// for _, p := range validPackages {
 		// 	fmt.Println(p)
 		// }
-		mapB, _ := json.Marshal(results)
-		fmt.Println(string(mapB))
+		b, _ := json.Marshal(validPackages)
+		fmt.Println(string(b))
 	}
 }

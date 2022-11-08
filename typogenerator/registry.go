@@ -28,10 +28,45 @@ var registryURL map[string]string = map[string]string{
 	"npm":      "https://registry.npmjs.org/%s",
 }
 
+var Registry *string
+
 func Exists(packageName, registry string) bool {
 	URL := fmt.Sprintf(registryURL[registry], packageName)
 
 	return exists(URL)
+}
+
+func GetValid(results []FuzzResult) []FuzzResult {
+	validPackages := []FuzzResult{}
+	ch := make(chan FuzzResult)
+
+	total := 0
+
+	for _, r := range results {
+		total += len(r.Permutations)
+		for _, p := range r.Permutations {
+			go func(p string) {
+				if Exists(p, *Registry) {
+					ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Resp{{p, true}}}
+				} else {
+					ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Resp{{p, false}}}
+				}
+			}(p.Name)
+		}
+	}
+
+	fmt.Printf("Total candidates: %d\n", total)
+
+	for i := 0; i < total; i++ {
+		select {
+		case resp := <-ch:
+			if resp.Permutations[0].Valid {
+				validPackages = append(validPackages, resp)
+			}
+		}
+	}
+
+	return validPackages
 }
 
 func exists(URL string) bool {
