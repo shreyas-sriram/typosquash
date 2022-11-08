@@ -23,11 +23,16 @@ import (
 	"zntr.io/typogenerator/strategy"
 )
 
+type Permutation struct {
+	Name  string `json:"name" yaml:"name"`
+	Valid bool   `json:"valid" yaml:"valid"`
+}
+
 // FuzzResult represents permutations results
 type FuzzResult struct {
-	StrategyName string   `json:"name" yaml:"name"`
-	Domain       string   `json:"domain" yaml:"domain"`
-	Permutations []string `json:"permutations" yaml:"permutations"`
+	StrategyName string        `json:"name" yaml:"name"`
+	Domain       string        `json:"domain" yaml:"domain"`
+	Permutations []Permutation `json:"permutations" yaml:"permutations"`
 }
 
 // Fuzz string using given strategies
@@ -68,7 +73,9 @@ func fuzz(domain, tld string, strategies ...strategy.Strategy) ([]FuzzResult, er
 			}
 
 			// Assign permutations to result
-			r.Permutations = domains
+			for _, d := range domains {
+				r.Permutations = append(r.Permutations, Permutation{d, false})
+			}
 
 			// Add result
 			res = append(res, r)

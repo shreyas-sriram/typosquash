@@ -18,6 +18,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -37,7 +38,14 @@ var (
 )
 
 func init() {
+	typogenerator.Registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
+
 	flag.Parse()
+
+	if !(*typogenerator.Registry == "pypi" || *typogenerator.Registry == "rubygems" || *typogenerator.Registry == "npm") {
+		fmt.Println("Registry can be one of - rubygems, pypi, npm")
+		os.Exit(1)
+	}
 }
 
 func main() {
@@ -80,29 +88,31 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
+	validPackages := typogenerator.GetValid(results)
+
 	if !*permutationOnly {
 		writer := gocsv.NewWriter(os.Stdout)
 		writer.QuoteFields = true
 		defer writer.Flush()
 
 		// Write headers
-		if err := writer.Write([]string{"strategy", "domain", "permunation", "idna"}); err != nil {
+		if err := writer.Write([]string{"strategy", "domain", "permutation", "idna"}); err != nil {
 			panic(err)
 		}
 
 		for _, r := range results {
 			for _, p := range r.Permutations {
-				puny, _ := idna.ToASCII(p)
-				if err := writer.Write([]string{r.StrategyName, r.Domain, p, puny}); err != nil {
+				puny, _ := idna.ToASCII(p.Name)
+				if err := writer.Write([]string{r.StrategyName, r.Domain, p.Name, puny}); err != nil {
 					panic(err)
 				}
 			}
 		}
 	} else {
-		for _, r := range results {
-			for _, p := range r.Permutations {
-				fmt.Println(p)
-			}
-		}
+		// for _, p := range validPackages {
+		// 	fmt.Println(p)
+		// }
+		b, _ := json.Marshal(validPackages)
+		fmt.Println(string(b))
 	}
 }
