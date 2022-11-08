@@ -18,6 +18,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -83,12 +84,36 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
+	total := 0
+	// for _, r := range results {
+	// 	total += len(r.Permutations)
+	// }
+
+	// fmt.Printf("Total: %d", total)
+	// fmt.Printf("Results: %s", results)
+
 	validPackages := []string{}
+	ch := make(chan typogenerator.Resp)
 
 	for _, r := range results {
+		total += len(r.Permutations)
 		for _, p := range r.Permutations {
-			if typogenerator.Exists(p, *registry) {
-				validPackages = append(validPackages, p)
+			go func(p string) {
+				// fmt.Printf("Checking: %s\n", p)
+				if typogenerator.Exists(p, *registry) {
+					ch <- typogenerator.Resp{Name: p, Valid: true}
+				} else {
+					ch <- typogenerator.Resp{Name: p, Valid: false}
+				}
+			}(p.Name)
+		}
+	}
+
+	for i := 0; i < total; i++ {
+		select {
+		case resp := <-ch:
+			if resp.Valid {
+				validPackages = append(validPackages, resp.Name)
 			}
 		}
 	}
@@ -99,21 +124,23 @@ func main() {
 		defer writer.Flush()
 
 		// Write headers
-		if err := writer.Write([]string{"strategy", "domain", "permunation", "idna"}); err != nil {
+		if err := writer.Write([]string{"strategy", "domain", "permutation", "idna"}); err != nil {
 			panic(err)
 		}
 
 		for _, r := range results {
 			for _, p := range r.Permutations {
-				puny, _ := idna.ToASCII(p)
-				if err := writer.Write([]string{r.StrategyName, r.Domain, p, puny}); err != nil {
+				puny, _ := idna.ToASCII(p.Name)
+				if err := writer.Write([]string{r.StrategyName, r.Domain, p.Name, puny}); err != nil {
 					panic(err)
 				}
 			}
 		}
 	} else {
-		for _, p := range validPackages {
-			fmt.Println(p)
-		}
+		// for _, p := range validPackages {
+		// 	fmt.Println(p)
+		// }
+		mapB, _ := json.Marshal(results)
+		fmt.Println(string(mapB))
 	}
 }
