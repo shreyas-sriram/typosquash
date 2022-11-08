@@ -17,6 +17,8 @@
 
 package strategy
 
+import "fmt"
+
 type combineStrategy struct {
 	strategies []Strategy
 }
@@ -45,7 +47,13 @@ func (s *combineStrategy) Generate(domain, tld string) ([]string, error) {
 }
 
 func (s *combineStrategy) GetName() string {
-	return "Combine"
+	name := ""
+
+	for _, s := range s.strategies {
+		name = fmt.Sprintf("%s%s, ", name, s.GetName())
+	}
+
+	return fmt.Sprintf("Combine(%s)", name[:len(name)-2])
 }
 
 func fuzz(domain string, strategy Strategy) ([]string, error) {
