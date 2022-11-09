@@ -55,7 +55,7 @@ func GetValid(results []FuzzResult) []FuzzResult {
 		}
 	}
 
-	fmt.Printf("Total candidates: %d\n", total)
+	// fmt.Printf("Total candidates: %d\n", total)
 
 	for i := 0; i < total; i++ {
 		select {
@@ -71,7 +71,10 @@ func GetValid(results []FuzzResult) []FuzzResult {
 
 func exists(URL string) bool {
 	resp, err := http.Get(URL)
-	if err != nil || resp.StatusCode == http.StatusNotFound {
+
+	// handle 429 responses
+	// handle old npm security handles - https://www.npmjs.com/package/axois
+	if err != nil || resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusTooManyRequests {
 		return false
 	}
 
