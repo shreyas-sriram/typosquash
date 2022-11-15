@@ -19,7 +19,9 @@ package typogenerator
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 )
 
 var registryURL map[string]string = map[string]string{
@@ -38,30 +40,41 @@ func Exists(packageName, registry string) bool {
 
 func GetValid(results []FuzzResult) []FuzzResult {
 	validPackages := []FuzzResult{}
-	ch := make(chan FuzzResult)
 
-	total := 0
-
-	for _, r := range results {
-		total += len(r.Permutations)
-		for _, p := range r.Permutations {
-			go func(p string) {
-				if Exists(p, *Registry) {
-					ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, true}}}
-				} else {
-					ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, false}}}
+	// rubygems API throttles requests, hence no concurrrency
+	// pypi and npm are good
+	if *Registry == "rubygems" {
+		for _, r := range results {
+			for _, p := range r.Permutations {
+				if Exists(p.Name, *Registry) {
+					validPackages = append(validPackages, FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p.Name, true}}})
 				}
-			}(p.Name)
+			}
 		}
-	}
+	} else {
+		ch := make(chan FuzzResult)
 
-	fmt.Printf("Total candidates: %d\n", total)
+		total := 0
 
-	for i := 0; i < total; i++ {
-		select {
-		case resp := <-ch:
-			if resp.Permutations[0].Valid {
-				validPackages = append(validPackages, resp)
+		for _, r := range results {
+			total += len(r.Permutations)
+			for _, p := range r.Permutations {
+				go func(p string) {
+					if Exists(p, *Registry) {
+						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, true}}}
+					} else {
+						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, false}}}
+					}
+				}(p.Name)
+			}
+		}
+
+		for i := 0; i < total; i++ {
+			select {
+			case resp := <-ch:
+				if resp.Permutations[0].Valid {
+					validPackages = append(validPackages, resp)
+				}
 			}
 		}
 	}
@@ -71,11 +84,26 @@ func GetValid(results []FuzzResult) []FuzzResult {
 
 func exists(URL string) bool {
 	resp, err := http.Get(URL)
-	if err != nil || resp.StatusCode == http.StatusNotFound {
+
+	if err != nil {
 		return false
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusNotFound {
+		return false
+	}
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return false
+	}
+
+	// handle old npm security handles - https://www.npmjs.com/package/axois
+	if strings.Contains(string(b), "security holding package") {
+		return false
+	}
 
 	return true
 }
