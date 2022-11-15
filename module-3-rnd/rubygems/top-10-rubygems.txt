@@ -1,0 +1,11 @@
+https://rubygems.org/stats
+bundler
+aws-sdk-core
+rspec-expectations
+diff-lcs
+rspec-core
+rspec-mocks
+rspec-support
+aws-sigv4
+i18n
+jmespath
