@@ -1,0 +1,32 @@
+name: "Build docker"
+
+on:
+  pull_request:
+
+  push:
+    paths-ignore:
+      - '**.md'
+
+permissions: read-all
+
+jobs:
+  build_docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v2.4.0
+
+    - name: setup-go
+      uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f # v2.1.5
+      with:
+        go-version: '1.19.1'
+
+    - name: Enable docker experimental
+      run: |
+        echo $'{"experimental": true}' | sudo dd status=none of=/etc/docker/daemon.json
+        sudo service docker restart
+        docker version -f '{{.Server.Experimental}}'
+
+    - name: build_docker
+      run: NOPUSH=true ./build_docker.sh
+      working-directory: build
