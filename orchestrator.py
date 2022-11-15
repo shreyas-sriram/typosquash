@@ -4,14 +4,33 @@ import subprocess
 
 valid_registries = ['npm', 'pypi', 'rubygems']
 
-class package:
+class Package:
     def __init__(self, name, registry) -> None:
         self.name = name
         self.registry = registry
+        self.candidates = {}
+
+    def stringify(self,):
+        o = f'Name: {self.name}\n'
+        o += f'Registry: {self.registry}\n'
+
+        return o
+
+    def run_module_1(self):
+        print(f'[INFO] Running module 1 (candidate generator) for package: {self.name}')
+
+        result = subprocess.run(['typogenerator/typogenerator', '-s', self.name, '-r', self.registry, '-p'], stdout=subprocess.PIPE)
+
+        candidates = result.stdout.decode('utf-8').splitlines()
+
+        self.candidates = json.loads(candidates[0])
+
+    def get_candidates(self):
+        return self.candidates
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', nargs='?', default='packages.txt', type=str)
+    parser.add_argument('-f', nargs='?', default='sample-packages.txt', type=str)
     args = parser.parse_args()
 
     return args
@@ -33,31 +52,21 @@ def read_packages_from_file(file):
             print(f'[ERROR] Invalid format, ignoring entry: {line}')
             continue
 
-        package_list.append(package(blocks[0], blocks[1].strip()))
+        package_list.append(Package(blocks[0], blocks[1].strip()))
 
     return package_list
 
-def run_module_1(package):
-    print(f'[INFO] Running module 1 (candidate generator) for package: {package.name}')
-
-    result = subprocess.run(['typogenerator/typogenerator', '-s', package.name, '-r', package.registry, '-p'], stdout=subprocess.PIPE)
-
-    candidates = result.stdout.decode('utf-8').splitlines()
-
-    return candidates
-
 def main(file):
     # read and parse packages from file
-    package_list = read_packages_from_file(file)
+    packages = read_packages_from_file(file)
 
     module_1_json_list = {}
 
     # run module 1 for each package
-    for p in package_list:
-        candidates = run_module_1(p)
-        candidates = json.loads(candidates[0])
+    for package in packages:
+        package.run_module_1()
 
-        module_1_json_list[p.name] = candidates
+        module_1_json_list[package.name] = package.get_candidates()
 
     print(json.dumps(module_1_json_list, indent=4))
 
