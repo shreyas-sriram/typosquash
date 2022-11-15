@@ -7,6 +7,8 @@ package_analysis_script = '/home/shreyas/Downloads/fall-2022/capstone/code/packa
 
 FILE_IGNORE_LIST = [
     '.cache', 'site-packages', '__pycache__', '/tmp', 'python3.9', 'https://', # pypi
+    '_cacache', 'node_modules', # npm
+    '.local', '/usr/local/lib/ruby', # rubygems
     ]
 
 import_files_baseline = {}
