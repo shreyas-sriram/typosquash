@@ -1,0 +1,11 @@
+https://hugovk.github.io/top-pypi-packages/top-pypi-packages-30-days.json
+boto3
+botocore
+urllib3
+requests
+setuptools
+google-api-core
+s3transfer
+charset-normalizer
+typing-extensions
+idna
