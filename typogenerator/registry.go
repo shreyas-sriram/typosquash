@@ -59,13 +59,13 @@ func GetValid(results []FuzzResult) []FuzzResult {
 		for _, r := range results {
 			total += len(r.Permutations)
 			for _, p := range r.Permutations {
-				go func(p string) {
+				go func(p string, r FuzzResult) {
 					if Exists(p, *Registry) {
 						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, true}}}
 					} else {
 						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, false}}}
 					}
-				}(p.Name)
+				}(p.Name, r)
 			}
 		}
 
