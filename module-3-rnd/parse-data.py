@@ -7,7 +7,7 @@ registry = 'rubygems' # CHANGEME
 FILE_IGNORE_LIST = [
     '.cache', 'site-packages', '__pycache__', '/tmp', 'python3.9', 'https://', # pypi
     '_cacache', 'node_modules', # npm
-    '/usr/local/lib/ruby/gems', # rubygems
+    '.local', '/usr/local/lib/ruby', # rubygems
     ]
 
 files = os.listdir(f'./{registry}/data')
