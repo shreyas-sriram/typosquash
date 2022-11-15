@@ -1,7 +1,14 @@
 import os
 import json
 
-registry = 'npm' # CHANGEME
+# pypi, npm, rubygems
+registry = 'rubygems' # CHANGEME
+
+FILE_IGNORE_LIST = [
+    '.cache', 'site-packages', '__pycache__', '/tmp', 'python3.9', 'https://', # pypi
+    '_cacache', 'node_modules', # npm
+    '/usr/local/lib/ruby/gems', # rubygems
+    ]
 
 files = os.listdir(f'./{registry}/data')
 
@@ -37,11 +44,14 @@ install_dns_whitelist = {}
 
 #####################################
 
-def parse_files(files):
+def parse_files(files, package_name):
     parsed_files = {}
-    
+
+    ignore_list = FILE_IGNORE_LIST + [package_name]
+
     for _file in files:
-        parsed_files[_file['Path']] = (_file['Read'], _file['Write'], _file['Delete'])
+        if not any(word in _file['Path'] for word in ignore_list):
+            parsed_files[_file['Path']] = (_file['Read'], _file['Write'], _file['Delete'])
 
     return parsed_files
 
@@ -83,7 +93,7 @@ for file in files:
     install_dns = data['Analysis']['install']['DNS']
 
     ##### IMPORT #####
-    import_files_whitelist.update(parse_files(import_files))
+    import_files_whitelist.update(parse_files(import_files, package_name))
 
     if import_sockets and len(import_sockets) > 0:
         import_sockets_whitelist.update(parse_sockets(import_sockets))
@@ -93,7 +103,7 @@ for file in files:
             import_dns_whitelist.update(parse_dns(import_dns))
 
     ##### INSTALL #####
-    install_files_whitelist.update(parse_files(install_files))
+    install_files_whitelist.update(parse_files(install_files, package_name))
 
     if len(install_sockets) > 0:
         install_sockets_whitelist.update(parse_sockets(install_sockets))
