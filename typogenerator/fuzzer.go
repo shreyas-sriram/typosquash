@@ -30,9 +30,9 @@ type Permutation struct {
 
 // FuzzResult represents permutations results
 type FuzzResult struct {
-	StrategyName string        `json:"name" yaml:"name"`
-	Domain       string        `json:"domain" yaml:"domain"`
-	Permutations []Permutation `json:"permutations" yaml:"permutations"`
+	StrategyName string        `json:"strategy" yaml:"strategy"`
+	Domain       string        `json:"package_name" yaml:"package_name"`
+	Permutations []Permutation `json:"candidate" yaml:"candidate"`
 }
 
 // Fuzz string using given strategies
