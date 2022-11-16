@@ -55,7 +55,7 @@ func (s *similarStrategy) Generate(domain, tld string) ([]string, error) {
 					for _, g := range repList {
 						win = []rune(fmt.Sprintf("%s%c%s", string(win[:j]), g, string(win[j+1:])))
 						fuzzed := fmt.Sprintf("%s%s%s", string(dom[:i]), string(win), string(dom[i+ws:]))
-						fuzzed = combineTLD(fuzzed, tld)
+						// fuzzed = combineTLD(fuzzed, tld)
 						res = append(res, fuzzed)
 					}
 				}

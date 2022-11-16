@@ -36,7 +36,7 @@ func (s *substituteWordStrategy) Generate(domain, tld string) ([]string, error) 
 
 		for _, similarWord := range similarWords {
 			fuzzed := strings.ReplaceAll(domain, word, similarWord)
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 
 			if fuzzed != domain {
 				res = append(res, fuzzed)

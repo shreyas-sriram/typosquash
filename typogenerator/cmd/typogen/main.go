@@ -25,7 +25,6 @@ import (
 
 	"github.com/hduplooy/gocsv"
 	"github.com/namsral/flag"
-	"golang.org/x/net/idna"
 
 	"zntr.io/typogenerator"
 	"zntr.io/typogenerator/mapping"
@@ -33,8 +32,10 @@ import (
 )
 
 var (
-	input           = flag.String("s", "zenithar", "Defines string to alternate")
-	permutationOnly = flag.Bool("p", false, "Display permutted domain only")
+	input      = flag.String("s", "zenithar", "Defines package to alternate")
+	JSONOutput = flag.Bool("j", false, "Display JSON output")
+
+	validateCandidates = flag.Bool("v", false, "Perform validation for generated candidates")
 )
 
 func init() {
@@ -88,27 +89,34 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
-	validPackages := typogenerator.GetValid(results)
 	outputJSON := struct {
 		Results []typogenerator.FuzzResult `json:"results"`
 	}{
-		Results: validPackages,
+		Results: results,
 	}
 
-	if !*permutationOnly {
+	if *validateCandidates {
+		validPackages := typogenerator.GetValid(results)
+		outputJSON = struct {
+			Results []typogenerator.FuzzResult `json:"results"`
+		}{
+			Results: validPackages,
+		}
+	}
+
+	if !*JSONOutput {
 		writer := gocsv.NewWriter(os.Stdout)
 		writer.QuoteFields = true
 		defer writer.Flush()
 
 		// Write headers
-		if err := writer.Write([]string{"strategy", "domain", "permutation", "idna"}); err != nil {
+		if err := writer.Write([]string{"strategy", "victim", "candidate"}); err != nil {
 			panic(err)
 		}
 
 		for _, r := range results {
 			for _, p := range r.Permutations {
-				puny, _ := idna.ToASCII(p.Name)
-				if err := writer.Write([]string{r.StrategyName, r.Domain, p.Name, puny}); err != nil {
+				if err := writer.Write([]string{r.StrategyName, r.Domain, p.Name}); err != nil {
 					panic(err)
 				}
 			}

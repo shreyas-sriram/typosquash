@@ -34,7 +34,7 @@ func (s *prefixStrategy) Generate(domain, tld string) ([]string, error) {
 	for _, prefix := range s.prefixes {
 		for _, connector := range s.connectors {
 			fuzzed := fmt.Sprintf("%s%s%s", prefix, connector, domain)
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
 	}

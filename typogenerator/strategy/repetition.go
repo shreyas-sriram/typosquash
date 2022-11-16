@@ -36,7 +36,7 @@ func (s *repetitionStrategy) Generate(domain, tld string) ([]string, error) {
 	for i, c := range domain {
 		if helpers.IsAlpha(c) {
 			fuzzed := fmt.Sprintf("%s%c%c%s", domain[:i], domain[i], domain[i], domain[i+1:])
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
 	}

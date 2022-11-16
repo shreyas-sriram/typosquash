@@ -47,11 +47,11 @@ func (s *doublehitStrategy) Generate(domain, tld string) ([]string, error) {
 		if len(keys) > 0 {
 			for _, c := range keys {
 				fuzzed := fmt.Sprintf("%s%c%c%s", string(dom[:i]), c, dom[i], string(dom[i+1:]))
-				fuzzed = combineTLD(fuzzed, tld)
+				// fuzzed = combineTLD(fuzzed, tld)
 				res = append(res, fuzzed)
 
 				fuzzed = fmt.Sprintf("%s%c%c%s", string(dom[:i]), dom[i], c, string(dom[i+1:]))
-				fuzzed = combineTLD(fuzzed, tld)
+				// fuzzed = combineTLD(fuzzed, tld)
 				res = append(res, fuzzed)
 			}
 		}

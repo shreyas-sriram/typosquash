@@ -31,7 +31,7 @@ func (s *omissionStrategy) Generate(domain, tld string) ([]string, error) {
 
 	for i := range domain {
 		fuzzed := fmt.Sprintf("%s%s", domain[:i], domain[i+1:])
-		fuzzed = combineTLD(fuzzed, tld)
+		// fuzzed = combineTLD(fuzzed, tld)
 		res = append(res, fuzzed)
 	}
 

@@ -38,7 +38,7 @@ func (s *vowelwapStrategy) Generate(domain, tld string) ([]string, error) {
 			case 'a', 'e', 'i', 'o', 'u', 'y':
 				if dom[i] != v {
 					fuzzed := fmt.Sprintf("%s%c%s", string(dom[:i]), v, string(dom[i+1:]))
-					fuzzed = combineTLD(fuzzed, tld)
+					// fuzzed = combineTLD(fuzzed, tld)
 					res = append(res, fuzzed)
 				}
 			default:

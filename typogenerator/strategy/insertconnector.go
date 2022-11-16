@@ -36,7 +36,7 @@ func (s *insertConnectorStrategy) Generate(domain, tld string) ([]string, error)
 		if !(r == '.' || r == '-' || r == '_') && !(rp == '.' || rp == '-' || rp == '_') {
 			for _, connector := range s.connectors {
 				fuzzed := fmt.Sprintf("%s%s%s", domain[:i], connector, domain[i:])
-				fuzzed = combineTLD(fuzzed, tld)
+				// fuzzed = combineTLD(fuzzed, tld)
 				res = append(res, fuzzed)
 			}
 		}

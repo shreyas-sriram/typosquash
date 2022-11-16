@@ -31,7 +31,7 @@ func (s *swapWordStrategy) Generate(domain, tld string) ([]string, error) {
 	for i := 0; i < len(domain)-1; i++ {
 		if domain[i] == '.' || domain[i] == '-' || domain[i] == '_' {
 			fuzzed := fmt.Sprintf("%s%s%s", domain[i+1:], string(domain[i]), domain[:i])
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
 	}

@@ -35,14 +35,14 @@ func (s *suffixStrategy) Generate(domain, tld string) ([]string, error) {
 	for _, suffix := range s.suffixes {
 		for _, connector := range s.connectors {
 			fuzzed := fmt.Sprintf("%s%s%s", domain, connector, suffix)
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
 	}
 
 	for _, suffix := range s.simpleSuffixes {
 		fuzzed := fmt.Sprintf("%s%s", domain, suffix)
-		fuzzed = combineTLD(fuzzed, tld)
+		// fuzzed = combineTLD(fuzzed, tld)
 		res = append(res, fuzzed)
 	}
 

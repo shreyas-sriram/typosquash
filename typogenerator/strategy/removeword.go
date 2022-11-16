@@ -31,11 +31,11 @@ func (s *removeWordStrategy) Generate(domain, tld string) ([]string, error) {
 	for i := 0; i < len(domain)-1; i++ {
 		if domain[i] == '.' || domain[i] == '-' || domain[i] == '_' {
 			fuzzed := fmt.Sprintf("%s", domain[:i])
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 
 			fuzzed = fmt.Sprintf("%s", domain[i+1:])
-			fuzzed = combineTLD(fuzzed, tld)
+			// fuzzed = combineTLD(fuzzed, tld)
 			res = append(res, fuzzed)
 		}
 	}
