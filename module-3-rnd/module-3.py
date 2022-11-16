@@ -3,7 +3,7 @@ import json
 import argparse
 import subprocess
 
-package_analysis_script = '/home/shreyas/Downloads/fall-2022/capstone/code/package-analysis/run_analysis.sh' #CHANGME
+package_analysis_script = '/home/shreyas/Downloads/fall-2022/capstone/code/package-analysis/run_analysis.sh' # CHANGME
 
 FILE_IGNORE_LIST = [
     '.cache', 'site-packages', '__pycache__', '/tmp', 'python3.9', 'https://', # pypi
@@ -11,35 +11,162 @@ FILE_IGNORE_LIST = [
     '.local', '/usr/local/lib/ruby', # rubygems
     ]
 
-import_files_baseline = {}
-import_sockets_baseline = {}
-import_dns_baseline = {}
-install_files_baseline = {}
-install_sockets_baseline = {}
-install_dns_baseline = {}
-
-class package:
-    def __init__(self, name, registry) -> None:
+class Package:
+    def __init__(self, name, registry):
         self.name = name
         self.registry = registry
 
-# class baseline:
-#     def __init__(self, name, registry) -> None:
-#         self.name = name
-#         self.registry = registry
+        self.import_files = {}
+        self.import_sockets = {}
+        self.import_dns = {}
 
-def load_baselines(path):
-    data = json.load(open(path))
+        self.install_files = {}
+        self.install_sockets = {}
+        self.install_dns = {}
+
+        self.results_dir = '/tmp/results'
+
+        self.install_files = {}
+        self.install_sockets = {}
+        self.install_dns = {}
+
+        self.violated_files = {}
+        self.violated_sockets = {}
+        self.violated_dns = {}
+
+    def run_dynamic_analysis(self):
+        print(f'[INFO] Running dynamic analysis for package: {self.name}')
+
+        subprocess.run(['sudo', package_analysis_script, self.registry, self.name], stdout=subprocess.PIPE)
+
+    def read_dynamic_analysis_output(self):
+        print(f'[INFO] Reading dynamic analysis output from: {self.results_dir}')
+
+        files = os.listdir(self.results_dir)
+        data = {}
+        
+        for file in ['violated.json']:
+            if file.endswith('.json'):
+                print(f'[INFO] Reading from file: {file}')
+                data = json.load(open(f'{self.results_dir}/{file}'))
+
+        self.parse_output(data)
+
+    def parse_output(self, data):
+        print(f'[INFO] Parsing dynamic analysis output result')
+
+        self.import_files = data['Analysis']['import']['Files']
+        self.import_sockets = data['Analysis']['import']['Sockets']
+        self.import_dns = data['Analysis']['import']['DNS']
+
+        self.install_files = data['Analysis']['install']['Files']
+        self.install_sockets = data['Analysis']['install']['Sockets']
+        self.install_dns = data['Analysis']['install']['DNS']
+
+    def new_violation(self, type, key, value):
+        if type == 'file':
+            self.violated_files[key] = value
+        elif type == 'socket':
+            self.violated_sockets[key] = value
+        elif type == 'dns':
+            self.violated_dns[key] = value
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+    def get_violation(self):
+        output = {
+            'files': self.violated_files,
+            'sockets': self.violated_sockets,
+            'DNS': self.violated_dns,
+            }
+        return json.dumps(output, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+class Baseline:
+    baseline_path = '/home/shreyas/Downloads/fall-2022/capstone/code/module-3-rnd/{}/{}-baseline.json'
+
+    def __init__(self, registry):
+        self.registry = registry
+        
+        self.baseline_path = self.baseline_path.format(registry, registry)
+        self.baseline = {}
+
+        self.import_files = {}
+        self.import_sockets = {}
+        self.import_dns = {}
+
+        self.install_files = {}
+        self.install_sockets = {}
+        self.install_dns = {}
+
+        self.violated_files = {}
+        self.violated_sockets = {}
+        self.violated_dns = {}
+
+    def load_baseline(self):
+        print(f'[INFO] Loading baseline from: {self.baseline_path}')
+
+        data = json.load(open(self.baseline_path))
     
-    import_files_baseline = data['import']['files']
-    import_sockets_baseline = data['import']['sockets']
-    import_dns_baseline = data['import']['dns']
+        self.import_files = data['import']['files']
+        self.import_sockets = data['import']['sockets']
+        self.import_dns = data['import']['dns']
 
-    install_files_baseline = data['install']['files']
-    install_sockets_baseline = data['install']['sockets']
-    install_dns_baseline = data['install']['dns']
+        self.install_files = data['install']['files']
+        self.install_sockets = data['install']['sockets']
+        self.install_dns = data['install']['dns']
 
-    return import_files_baseline, import_sockets_baseline, import_dns_baseline, install_files_baseline, install_sockets_baseline, install_dns_baseline
+    def evaluate(self, package: Package):
+        print(f'[INFO] Comparing results with baseline for package: {package.name}')
+
+        self.evaluate_files(self.import_files, package, package.import_files, package.name, 'import')
+        self.evaluate_sockets(self.import_sockets, package, package.import_sockets, 'import')
+        self.evaluate_dns(self.import_dns, package, package.import_dns, 'import')
+
+        self.evaluate_files(self.install_files, package, package.install_files, package.name, 'install')
+        self.evaluate_sockets(self.install_sockets, package, package.install_sockets, 'install')
+        self.evaluate_dns(self.install_dns, package, package.install_dns, 'install')
+
+    def evaluate_files(self, baseline_files, package: Package, candidate_files, package_name, command):
+        print(f'[INFO] Comparing files for command: {command}')
+
+        ignore_list = FILE_IGNORE_LIST + [package_name]
+
+        for file in candidate_files:
+            needle = [file['Read'], file['Write'], file['Delete']]
+
+            if not any(word in file['Path'] for word in ignore_list):
+                if baseline_files.get(file['Path'], []) != needle:
+                    print(f"[CRITICAL] Violated file for command `{command}`: {file['Path']}")
+                    package.new_violation('file', file['Path'], {'action': needle, 'command': command})
+
+    def evaluate_sockets(self, baseline_sockets, package: Package, candidate_sockets, command):
+        print(f'[INFO] Comparing sockets for command: {command}')
+
+        if not candidate_sockets:
+            return
+        for socket in candidate_sockets:
+            needle = socket['Port']
+
+            if baseline_sockets.get(socket['Address'], 0) != needle:
+                print(f"[CRITICAL] Violated socket for command `{command}`: {socket['Address']}")
+                package.new_violation('socket', socket['Address'], {'port': socket['Port'], 'hostnames': socket['Hostnames'], 'command': command})
+
+    def evaluate_dns(self, baseline_dns, package: Package, candidate_dns, command):
+        print(f'[INFO] Comparing DNS for command: {command}')
+
+        if not candidate_dns:
+            return
+
+        for dns in candidate_dns[0]['Queries']:
+            needle = dns['Hostname']
+
+            if baseline_dns.get(needle, False) == False:
+                print(f"[CRITICAL] Violated DNS for command `{command}`: {dns['Hostname']}")
+                package.new_violation('dns', dns['Hostname'], {'command': command})
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 def init():
     parser = argparse.ArgumentParser()
@@ -49,98 +176,29 @@ def init():
 
     return args
 
-def read_dynamic_analysis_output():
-    files = os.listdir('/tmp/results')
-    f = {}
+def main(package, registry):
+    package = Package(package, registry)
     
-    for file in files:
-        if file.endswith('.json'):
-            # Opening JSON files
-            f = json.load(open(f'/tmp/results/{file}'))
+    package.run_dynamic_analysis()
+    package.read_dynamic_analysis_output()
 
-    return f
+    baseline = Baseline(registry)
 
-def run_dynamic_analysis(package):
-    print(f'[INFO] Running dyanmic analysis for package: {package.name}')
+    baseline.load_baseline()
+    baseline.evaluate(package)
 
-    subprocess.run(['sudo', package_analysis_script, package.registry, package.name], stdout=subprocess.PIPE)
+    print(package.get_violation())
 
-def evaluate_files(candidate_files, baseline_files, package_name):
-    ignore_list = FILE_IGNORE_LIST + [package_name]
-
-    for file in candidate_files:
-        needle = [file['Read'], file['Write'], file['Delete']]
-
-        if not any(word in file['Path'] for word in ignore_list):
-            if baseline_files.get(file['Path'], []) != needle:
-                print(file['Path'])
-
-def evaluate_sockets(candidate_sockets, baseline_sockets):
-    for socket in candidate_sockets:
-        needle = socket['Port']
-
-        if baseline_sockets.get(socket['Address'], 0) != needle:
-            print(socket['Address'])
-
-def evaluate_dns(candidate_dns, baseline_dns):
-    for dns in candidate_dns[0]['Queries']:
-        needle = dns['Hostname']
-
-        if baseline_dns.get(needle, False) == False:
-            print(dns['Hostname'])
-
-def parse_output(data):
-    package_name = data['Package']['Name']
-
-    import_files = data['Analysis']['import']['Files']
-    import_sockets = data['Analysis']['import']['Sockets']
-    import_dns = data['Analysis']['import']['DNS']
-
-    install_files = data['Analysis']['install']['Files']
-    install_sockets = data['Analysis']['install']['Sockets']
-    install_dns = data['Analysis']['install']['DNS']
-
-    return package_name, import_files, import_sockets, import_dns, install_files, install_sockets, install_dns
-
-def main(package):
-    run_dynamic_analysis(package)
-
-    file_contents = read_dynamic_analysis_output()
-
-    package_name, import_files_candidate, import_sockets_candidate, import_dns_candidate, install_files_candidate, install_sockets_candidate, install_dns_candidate = parse_output(file_contents)
-
-    import_files_baseline, import_sockets_baseline, import_dns_baseline, install_files_baseline, install_sockets_baseline, install_dns_baseline = load_baselines(f'/home/shreyas/Downloads/fall-2022/capstone/code/module-3-rnd/{package.registry}/{package.registry}-baseline.json')
-
-    # print(import_files_baseline)
-    # print(import_sockets_baseline)
-    # print(import_dns_baseline)
-    # print(install_files_baseline)
-    # print(install_sockets_baseline)
-    # print(install_dns_baseline)
-
-    evaluate_files(import_files_candidate, import_files_baseline, package_name)
-    
-    if import_sockets_candidate and len(import_sockets_candidate) > 0:
-        evaluate_sockets(import_sockets_candidate, import_sockets_baseline)
-
-    if import_dns_candidate and len(import_dns_candidate) > 0:
-        evaluate_dns(import_dns_candidate, import_dns_baseline)
-
-    evaluate_files(install_files_candidate, install_files_baseline, package_name)
-    
-    if install_sockets_candidate and len(install_sockets_candidate) > 0:
-        evaluate_sockets(install_sockets_candidate, install_sockets_baseline)
-
-    if install_dns_candidate and len(install_dns_candidate) > 0:
-        evaluate_dns(install_dns_candidate, install_dns_baseline)
-
-    return 0
 
 if __name__ == '__main__':
     args = init()
 
     if not (args.p or args.r):
-        print('[ERROR] Wrong usage')
+        print('[ERROR] Usage: sudo python3 module-3.py -p <package-name> -r <registry-name>')
         os._exit(1)
 
-    main(package(args.p, args.r))
+    if args.r and args.r not in ['pypi', 'npm', 'rubygems']:
+        print('[ERROR] Use one of: [pypi, npm, rubygems]')
+        os._exit(1)
+
+    main(args.p, args.r)
