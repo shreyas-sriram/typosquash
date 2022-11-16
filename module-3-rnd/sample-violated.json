@@ -10425,7 +10425,7 @@
                     "Address": "69.0.42.0",
                     "Port": 8443,
                     "Hostnames": [
-                        "pypi.org"
+                        "attacker.onion"
                     ]
                 },
                 {
