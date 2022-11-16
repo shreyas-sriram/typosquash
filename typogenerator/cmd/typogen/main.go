@@ -89,6 +89,11 @@ func main() {
 	}
 
 	validPackages := typogenerator.GetValid(results)
+	outputJSON := struct {
+		Results []typogenerator.FuzzResult `json:"results"`
+	}{
+		Results: validPackages,
+	}
 
 	if !*permutationOnly {
 		writer := gocsv.NewWriter(os.Stdout)
@@ -109,10 +114,7 @@ func main() {
 			}
 		}
 	} else {
-		// for _, p := range validPackages {
-		// 	fmt.Println(p)
-		// }
-		b, _ := json.Marshal(validPackages)
+		b, _ := json.Marshal(outputJSON)
 		fmt.Println(string(b))
 	}
 }

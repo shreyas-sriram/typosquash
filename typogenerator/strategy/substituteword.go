@@ -58,8 +58,7 @@ func init() {
 			"hash":   {"", "crypto"},
 
 			// TODO - add other words
-			// "y": {"ies"},
-			// "_": {".", "-"},
+			// "color": {"colour"},
 		},
 	}
 }
