@@ -1,0 +1,542 @@
+{
+    "import": {
+        "files": {
+            "/dev/null": [
+                true,
+                false,
+                false
+            ],
+            "/dev/tty": [
+                true,
+                true,
+                false
+            ],
+            "/etc/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libgcc_s.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/proc/meminfo": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/fd": [
+                true,
+                false,
+                false
+            ],
+            "/sys/fs/cgroup/memory/memory.limit_in_bytes": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libstdc++.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/analyze.js": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/usr/package.json": [
+                true,
+                false,
+                false
+            ],
+            "0x4b0f1d /{dev=10": [
+                true,
+                false,
+                false
+            ],
+            "host:[4]": [
+                true,
+                false,
+                false
+            ],
+            "host:[5]": [
+                true,
+                false,
+                false
+            ],
+            "host:[6]": [
+                true,
+                false,
+                false
+            ],
+            "/etc/nsswitch.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/passwd": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/bin/whoami": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/whoami": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/sbin/whoami": [
+                true,
+                false,
+                false
+            ],
+            "/usr/sbin/whoami": [
+                true,
+                false,
+                false
+            ],
+            "socket:[4]": [
+                true,
+                false,
+                false
+            ],
+            "/dev/urandom": [
+                true,
+                false,
+                false
+            ],
+            "/etc/resolv.conf": [
+                true,
+                false,
+                false
+            ]
+        },
+        "sockets": {},
+        "dns": {}
+    },
+    "install": {
+        "files": {
+            "/app": [
+                true,
+                false,
+                false
+            ],
+            "/app/.git/HEAD": [
+                true,
+                false,
+                false
+            ],
+            "/app/.git/config": [
+                true,
+                false,
+                false
+            ],
+            "/app/.npmrc": [
+                true,
+                false,
+                false
+            ],
+            "/app/bin": [
+                true,
+                false,
+                false
+            ],
+            "/app/index.js": [
+                true,
+                false,
+                false
+            ],
+            "/app/npm-shrinkwrap.json": [
+                true,
+                false,
+                false
+            ],
+            "/app/package-lock.json": [
+                true,
+                true,
+                false
+            ],
+            "/app/package.json": [
+                true,
+                true,
+                false
+            ],
+            "/app/yarn.lock": [
+                true,
+                false,
+                false
+            ],
+            "/dev/null": [
+                true,
+                false,
+                false
+            ],
+            "/dev/tty": [
+                true,
+                true,
+                false
+            ],
+            "/dev/urandom": [
+                true,
+                false,
+                false
+            ],
+            "/etc/gai.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/host.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/hosts": [
+                true,
+                false,
+                false
+            ],
+            "/etc/localtime": [
+                true,
+                false,
+                false
+            ],
+            "/etc/nsswitch.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/resolv.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libgcc_s.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_dns-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_dns.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libresolv-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libresolv.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/proc/cpuinfo": [
+                true,
+                false,
+                false
+            ],
+            "/proc/meminfo": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/fd": [
+                true,
+                false,
+                false
+            ],
+            "/proc/stat": [
+                true,
+                false,
+                false
+            ],
+            "/root/.npm-init.js": [
+                true,
+                false,
+                false
+            ],
+            "/root/.npm/_logs": [
+                true,
+                false,
+                false
+            ],
+            "/root/.npm/_update-notifier-last-checked": [
+                false,
+                true,
+                false
+            ],
+            "/root/.npmrc": [
+                true,
+                false,
+                false
+            ],
+            "/sys/devices/system/cpu/online": [
+                true,
+                false,
+                false
+            ],
+            "/sys/fs/cgroup/memory/memory.limit_in_bytes": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libstdc++.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.25": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/analyze.js": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/etc/npmrc": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/usr/package.json": [
+                true,
+                false,
+                false
+            ],
+            "/usr/share/zoneinfo/UCT": [
+                true,
+                false,
+                false
+            ],
+            "0x4b0f1d /{dev=10": [
+                true,
+                false,
+                false
+            ],
+            "host:[4]": [
+                true,
+                false,
+                false
+            ],
+            "host:[5]": [
+                true,
+                false,
+                false
+            ],
+            "host:[6]": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/node": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/sbin/node": [
+                true,
+                false,
+                false
+            ],
+            "socket:[81]": [
+                true,
+                false,
+                false
+            ],
+            "socket:[83]": [
+                true,
+                false,
+                false
+            ],
+            "socket:[85]": [
+                true,
+                false,
+                false
+            ]
+        },
+        "sockets": {
+            "104.16.16.35": 443,
+            "104.16.17.35": 443,
+            "104.16.18.35": 443,
+            "104.16.19.35": 0,
+            "104.16.20.35": 443,
+            "104.16.21.35": 443,
+            "104.16.22.35": 0,
+            "104.16.23.35": 0,
+            "104.16.24.35": 443,
+            "104.16.25.35": 0,
+            "104.16.26.35": 0,
+            "104.16.27.35": 0,
+            "2606:4700::6810:1023": 0,
+            "2606:4700::6810:1123": 0,
+            "2606:4700::6810:1223": 0,
+            "2606:4700::6810:1323": 0,
+            "2606:4700::6810:1423": 0,
+            "2606:4700::6810:1523": 0,
+            "2606:4700::6810:1623": 0,
+            "2606:4700::6810:1723": 0,
+            "2606:4700::6810:1823": 0,
+            "2606:4700::6810:1923": 0,
+            "2606:4700::6810:1a23": 0,
+            "2606:4700::6810:1b23": 0,
+            "8.8.8.8": 53
+        },
+        "dns": {
+            "registry.npmjs.org": true
+        }
+    }
+}
