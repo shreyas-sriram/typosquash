@@ -34,8 +34,7 @@ class Package:
         self.violated_sockets = {}
         self.violated_dns = {}
 
-        for f in os.listdir(self.results_dir):
-            os.remove(os.path.join(self.results_dir, f))
+        os.system(f'sudo rm {self.results_dir}/*')
 
     def run_dynamic_analysis(self):
         # print(f'[INFO] Running dynamic analysis for package: {self.name}')
@@ -58,9 +57,10 @@ class Package:
     def parse_output(self, data):
         # print(f'[INFO] Parsing dynamic analysis output result')
 
-        self.import_files = data['Analysis']['import']['Files']
-        self.import_sockets = data['Analysis']['import']['Sockets']
-        self.import_dns = data['Analysis']['import']['DNS']
+        if 'import' in data['Analysis']:
+            self.import_files = data['Analysis']['import']['Files']
+            self.import_sockets = data['Analysis']['import']['Sockets']
+            self.import_dns = data['Analysis']['import']['DNS']
 
         self.install_files = data['Analysis']['install']['Files']
         self.install_sockets = data['Analysis']['install']['Sockets']
@@ -83,7 +83,7 @@ class Package:
             'sockets': self.violated_sockets,
             'DNS': self.violated_dns,
             }
-        return json.dumps(output, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        return json.dumps(output, default=lambda o: o.__dict__, sort_keys=True)
 
 class Baseline:
     baseline_path = './baselines/{}.json'
