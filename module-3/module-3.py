@@ -19,20 +19,18 @@ class Package:
         self.import_files = {}
         self.import_sockets = {}
         self.import_dns = {}
-
+        
         self.install_files = {}
         self.install_sockets = {}
         self.install_dns = {}
 
         self.results_dir = '/tmp/results'
 
-        self.install_files = {}
-        self.install_sockets = {}
-        self.install_dns = {}
-
         self.violated_files = {}
         self.violated_sockets = {}
         self.violated_dns = {}
+
+        self.ignore_list = FILE_IGNORE_LIST + [name]
 
         os.system(f'sudo rm {self.results_dir}/*')
 
@@ -67,47 +65,73 @@ class Package:
         self.install_dns = data['Analysis']['install']['DNS']
 
     def compare(self, p: 'Package'):
-        # compare import_files
-        self.compare_files(p)
+        self.compare_files(self.import_files, p.import_files, 'import')
+        self.compare_sockets(self.import_sockets, p.import_sockets, 'import')
+        self.compare_dns(self.import_dns, p.import_dns, 'import')
 
-        # compare import_sockets
-        self.compare_sockets(p)
+        self.compare_files(self.install_files, p.install_files, 'install')
+        self.compare_sockets(self.install_sockets, p.install_sockets, 'install')
+        self.compare_dns(self.install_dns, p.install_dns, 'install')
 
-        # compare import_dns
-        self.compare_dns(p)
+    def compare_files(self, new, baseline, command):
+        new_files = set()
+        baseline_files = set()
 
-    def compare_files(self, p: 'Package'):
-        if self.import_files and p.import_files:
-            for i in range(len(self.import_files)):
-                if (self.import_files[i]['Path'] != p.import_files[i]['Path'] or
-                    self.import_files[i]['Read'] != p.import_files[i]['Read'] or
-                    self.import_files[i]['Write'] != p.import_files[i]['Write'] or
-                    self.import_files[i]['Delete'] != p.import_files[i]['Delete']):
-                    self.violated_files[self.import_files[i]['Path']] = {
-                        'read': self.import_files[i]['Read'],
-                        'write': self.import_files[i]['Write'],
-                        'delete': self.import_files[i]['Delete'],
-                    }
+        for _new in new:
+            if not any(word in _new['Path'] for word in self.ignore_list):
+                new_files.add((_new['Path'], _new['Write'], _new['Read'], _new['Delete']))
 
-    def compare_sockets(self, p: 'Package'):
-        if self.import_files and p.import_files:
-            for i in range(len(self.import_files)):
-                if (self.import_files[i]['Path'] != p.import_files[i]['Path'] or
-                    self.import_files[i]['Read'] != p.import_files[i]['Read'] or
-                    self.import_files[i]['Write'] != p.import_files[i]['Write'] or
-                    self.import_files[i]['Delete'] != p.import_files[i]['Delete']):
-                    self.violated_files[self.import_files[i]['Path']] = {
-                        'read': self.import_files[i]['Read'],
-                        'write': self.import_files[i]['Write'],
-                        'delete': self.import_files[i]['Delete'],
-                    }
+        for _baseline in baseline:
+            if not any(word in _baseline['Path'] for word in FILE_IGNORE_LIST):
+                baseline_files.add((_baseline['Path'], _baseline['Write'], _baseline['Read'], _baseline['Delete']))
+
+        for el in new_files.difference(baseline_files):
+            path, write, read, delete = el
+            self.violated_files[path] = {
+                'read': read,
+                'write': write,
+                'delete': delete,
+                'command': command,
+            }
+
+    def compare_sockets(self, new, baseline, command):
+        new_sockets = set()
+        baseline_sockets = set()
+
+        if new:
+            for _new in new:
+                new_sockets.add((_new['Address'], _new['Port']))
+
+        if baseline:
+            for _baseline in baseline:
+                baseline_sockets.add((_baseline['Address'], _baseline['Port']))
+
+        for el in new_sockets.difference(baseline_sockets):
+            address, port = el
+            self.violated_sockets[address] = {
+                'port': port,
+                'command': command,
+            }
         
-    def compare_dns(self, p: 'Package'):
-        if self.import_dns and p.import_dns:
-            for i in range(len(self.import_dns)):
-                for j in range(len(self.import_dns[i]['Queries'])):
-                    if self.import_dns[i]['Queries'][j]['Hostname'] != p.import_dns[i]['Queries'][j]['Hostname']:
-                        self.violated_dns[self.import_dns[i]['Queries'][j]['Hostname']] = True
+    def compare_dns(self, new, baseline, command):
+        new_dns = set()
+        baseline_dns = set()
+
+        if new:
+            if 'Queries' in new[0] and len(new[0]['Queries']) > 0:
+                for _query in new[0]['Queries']:
+                    new_dns.add(_query['Hostname'])
+
+        if baseline:
+            if 'Queries' in baseline[0] and len(baseline[0]['Queries']) > 0:
+                for _query in baseline[0]['Queries']:
+                    baseline_dns.add(_query['Hostname'])
+
+        for el in new_dns.difference(baseline_dns):
+            hostname = el
+            self.violated_dns[hostname] = {
+                'command': command,
+            }
 
     def new_violation(self, type, key, value):
         if type == 'file':
@@ -225,7 +249,7 @@ def init():
     return args
 
 def main(original_package, typosquatting_package, registry):
-    t_package = Package(original_package, registry)
+    t_package = Package(typosquatting_package, registry)
     t_package.run_dynamic_analysis()
     t_package.read_dynamic_analysis_output()
     
@@ -234,6 +258,7 @@ def main(original_package, typosquatting_package, registry):
     o_package.read_dynamic_analysis_output()
 
     t_package.compare(o_package)
+    
     print(t_package.get_violation())
 
 if __name__ == '__main__':
