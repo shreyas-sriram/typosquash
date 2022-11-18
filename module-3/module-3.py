@@ -66,6 +66,49 @@ class Package:
         self.install_sockets = data['Analysis']['install']['Sockets']
         self.install_dns = data['Analysis']['install']['DNS']
 
+    def compare(self, p: 'Package'):
+        # compare import_files
+        self.compare_files(p)
+
+        # compare import_sockets
+        self.compare_sockets(p)
+
+        # compare import_dns
+        self.compare_dns(p)
+
+    def compare_files(self, p: 'Package'):
+        if self.import_files and p.import_files:
+            for i in range(len(self.import_files)):
+                if (self.import_files[i]['Path'] != p.import_files[i]['Path'] or
+                    self.import_files[i]['Read'] != p.import_files[i]['Read'] or
+                    self.import_files[i]['Write'] != p.import_files[i]['Write'] or
+                    self.import_files[i]['Delete'] != p.import_files[i]['Delete']):
+                    self.violated_files[self.import_files[i]['Path']] = {
+                        'read': self.import_files[i]['Read'],
+                        'write': self.import_files[i]['Write'],
+                        'delete': self.import_files[i]['Delete'],
+                    }
+
+    def compare_sockets(self, p: 'Package'):
+        if self.import_files and p.import_files:
+            for i in range(len(self.import_files)):
+                if (self.import_files[i]['Path'] != p.import_files[i]['Path'] or
+                    self.import_files[i]['Read'] != p.import_files[i]['Read'] or
+                    self.import_files[i]['Write'] != p.import_files[i]['Write'] or
+                    self.import_files[i]['Delete'] != p.import_files[i]['Delete']):
+                    self.violated_files[self.import_files[i]['Path']] = {
+                        'read': self.import_files[i]['Read'],
+                        'write': self.import_files[i]['Write'],
+                        'delete': self.import_files[i]['Delete'],
+                    }
+        
+    def compare_dns(self, p: 'Package'):
+        if self.import_dns and p.import_dns:
+            for i in range(len(self.import_dns)):
+                for j in range(len(self.import_dns[i]['Queries'])):
+                    if self.import_dns[i]['Queries'][j]['Hostname'] != p.import_dns[i]['Queries'][j]['Hostname']:
+                        self.violated_dns[self.import_dns[i]['Queries'][j]['Hostname']] = True
+
     def new_violation(self, type, key, value):
         if type == 'file':
             self.violated_files[key] = value
@@ -85,6 +128,7 @@ class Package:
             }
         return json.dumps(output, default=lambda o: o.__dict__, sort_keys=True)
 
+# TODO this is dead code; keeping it for future
 class Baseline:
     baseline_path = './baselines/{}.json'
 
@@ -173,30 +217,29 @@ class Baseline:
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', nargs='?', type=str, help='package name')
+    parser.add_argument('-p', nargs='?', type=str, help='original package name')
+    parser.add_argument('-t', nargs='?', type=str, help='typosquatting package name')
     parser.add_argument('-r', nargs='?', type=str, help='registry name')
     args = parser.parse_args()
 
     return args
 
-def main(package, registry):
-    package = Package(package, registry)
+def main(original_package, typosquatting_package, registry):
+    t_package = Package(original_package, registry)
+    t_package.run_dynamic_analysis()
+    t_package.read_dynamic_analysis_output()
+    
+    o_package = Package(original_package, registry)
+    o_package.run_dynamic_analysis()
+    o_package.read_dynamic_analysis_output()
 
-    package.run_dynamic_analysis()
-    package.read_dynamic_analysis_output()
-
-    baseline = Baseline(registry)
-
-    baseline.load_baseline()
-    baseline.evaluate(package)
-
-    print(package.get_violation())
-
+    t_package.compare(o_package)
+    print(t_package.get_violation())
 
 if __name__ == '__main__':
     args = init()
 
-    if not (args.p or args.r):
+    if not (args.p or args.t or args.r):
         print('[ERROR] Usage: sudo python3 module-3.py -p <package-name> -r <registry-name>')
         os._exit(1)
 
@@ -204,4 +247,4 @@ if __name__ == '__main__':
         print('[ERROR] Use one of: [pypi, npm, rubygems]')
         os._exit(1)
 
-    main(args.p, args.r)
+    main(args.p, args.t, args.r)
