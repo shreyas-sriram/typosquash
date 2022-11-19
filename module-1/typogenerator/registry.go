@@ -32,6 +32,7 @@ var registryURL map[string]string = map[string]string{
 
 var Registry *string
 
+// normalize modifies and returns the name that conforms to naming conventions
 func normalize(name string) string {
 	switch *Registry {
 	case "pypi":
@@ -43,6 +44,8 @@ func normalize(name string) string {
 	return name
 }
 
+// Clean removes the package name that resolve to similar names based on naming
+// conventions
 func Clean(results []FuzzResult, originalPackage string) []FuzzResult {
 	var cleanedResults []FuzzResult
 	seen := map[string]bool{originalPackage: true}
@@ -68,6 +71,7 @@ func Clean(results []FuzzResult, originalPackage string) []FuzzResult {
 	return cleanedResults
 }
 
+// GetValid returns a list of valid packages that exist in a registry
 func GetValid(results []FuzzResult) []FuzzResult {
 	validPackages := []FuzzResult{}
 
@@ -112,12 +116,14 @@ func GetValid(results []FuzzResult) []FuzzResult {
 	return validPackages
 }
 
+// exists checks for existence of a package in a registry
 func exists(packageName, registry string) bool {
 	URL := fmt.Sprintf(registryURL[registry], packageName)
 
 	return makeRequest(URL)
 }
 
+// makeRequest makes a request to the given URL
 func makeRequest(URL string) bool {
 	resp, err := http.Get(URL)
 

@@ -38,6 +38,7 @@ var (
 	validateCandidates = flag.Bool("v", false, "Perform validation for generated candidates")
 )
 
+// init parses flags and validates
 func init() {
 	typogenerator.Registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
 
