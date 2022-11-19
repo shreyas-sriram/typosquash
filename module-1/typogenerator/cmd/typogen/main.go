@@ -89,6 +89,8 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
+	results = typogenerator.Clean(results, *input)
+
 	outputJSON := struct {
 		Results []typogenerator.FuzzResult `json:"results"`
 	}{
