@@ -30,10 +30,10 @@ class Package:
 
         self.candidates = json.loads(candidates[0])['results']
 
-    def run_module_3(self):
+    def run_module_3(self, original_package: str):
         print(f'[INFO] Running module 3 (dynamic analyzer) for package: {self.name}')
 
-        result = subprocess.run(['sudo', 'python3', 'module-3.py', '-p', self.name, '-r', self.registry], stdout=subprocess.PIPE, cwd='./module-3')
+        result = subprocess.run(['sudo', 'python3', 'module-3.py', '-p', original_package, '-t', self.name, '-r', self.registry], stdout=subprocess.PIPE, cwd='./module-3')
 
         self.dynamic_violations = result.stdout.decode('utf-8').splitlines()
 
@@ -86,15 +86,15 @@ def main(file):
     module_1_json_list = {}
 
     # run module 1 for each package
-    for package in packages:
-        package.run_module_1()
+    for original_package in packages:
+        original_package.run_module_1()
 
-        for candidate in package.get_candidates_list():
-            p = Package(candidate, package.registry)
+        for candidate in original_package.get_candidates_list():
+            candidate_package = Package(candidate, original_package.registry)
 
-            p.run_module_3()
-            print(p.get_dynamic_violation())
+            candidate_package.run_module_3(original_package.name)
+            print(candidate_package.get_dynamic_violation())
 
-if __name__=='__main__':
+if __name__ == '__main__':
     args = init()
     main(args.f)
