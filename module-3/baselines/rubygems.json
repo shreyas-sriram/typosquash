@@ -1,0 +1,916 @@
+{
+    "import": {
+        "files": {
+            "/": [
+                true,
+                false,
+                false
+            ],
+            "/.bundle": [
+                true,
+                false,
+                false
+            ],
+            "/Gemfile": [
+                true,
+                false,
+                false
+            ],
+            "/app": [
+                true,
+                false,
+                false
+            ],
+            "/app/.bundle": [
+                true,
+                false,
+                false
+            ],
+            "/app/.bundle/config": [
+                true,
+                false,
+                false
+            ],
+            "/app/.gemspec": [
+                true,
+                false,
+                false
+            ],
+            "/app/Gemfile": [
+                true,
+                false,
+                false
+            ],
+            "/app/gems.rb": [
+                true,
+                false,
+                false
+            ],
+            "/dev/null": [
+                true,
+                true,
+                false
+            ],
+            "/dev/tty": [
+                true,
+                true,
+                false
+            ],
+            "/etc/localtime": [
+                true,
+                false,
+                false
+            ],
+            "/etc/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/gems.rb": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libcrypt-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libcrypt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/librt-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/librt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libz.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libz.so.1.2.11": [
+                true,
+                false,
+                false
+            ],
+            "/proc/3/maps": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/fd": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/maps": [
+                true,
+                false,
+                false
+            ],
+            "/root": [
+                true,
+                false,
+                false
+            ],
+            "/root/.bundle/config": [
+                true,
+                false,
+                false
+            ],
+            "/root/.gem": [
+                true,
+                false,
+                false
+            ],
+            "/root/.gem/specs": [
+                true,
+                false,
+                false
+            ],
+            "/usr": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/ssl/cert.pem": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libffi.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libffi.so.6.0.4": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libgmp.so.10": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libgmp.so.10.3.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libssl.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libyaml-0.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.5": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/analyze.rb": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libcrypt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libcrypto.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libffi.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libgmp.so.10": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/librt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libruby.so.3.0.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libssl.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libyaml-0.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libz.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/x86_64": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/x86_64/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/x86_64": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/x86_64/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/share/zoneinfo/UCT": [
+                true,
+                false,
+                false
+            ],
+            "0x4b0f1d /{dev=10": [
+                true,
+                false,
+                false
+            ],
+            "Gemfile": [
+                true,
+                false,
+                false
+            ],
+            "Isolate": [
+                true,
+                false,
+                false
+            ],
+            "gem.deps.rb": [
+                true,
+                false,
+                false
+            ],
+            "gems.rb": [
+                true,
+                false,
+                false
+            ],
+            "host:[4]": [
+                true,
+                false,
+                false
+            ],
+            "host:[5]": [
+                true,
+                false,
+                false
+            ],
+            "host:[6]": [
+                true,
+                false,
+                false
+            ],
+            "./.rspec": [
+                true,
+                false,
+                false
+            ],
+            "./.rspec-local": [
+                true,
+                false,
+                false
+            ],
+            "/root/.config/rspec/options": [
+                true,
+                false,
+                false
+            ],
+            "/root/.rspec": [
+                true,
+                false,
+                false
+            ],
+            "lib": [
+                true,
+                false,
+                false
+            ],
+            "spec": [
+                true,
+                false,
+                false
+            ]
+        },
+        "sockets": {},
+        "dns": {}
+    },
+    "install": {
+        "files": {
+            "/app": [
+                true,
+                false,
+                false
+            ],
+            "/dev/null": [
+                false,
+                true,
+                false
+            ],
+            "/dev/tty": [
+                true,
+                true,
+                false
+            ],
+            "/etc/gai.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/host.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/hosts": [
+                true,
+                false,
+                false
+            ],
+            "/etc/localtime": [
+                true,
+                false,
+                false
+            ],
+            "/etc/nsswitch.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/resolv.conf": [
+                true,
+                false,
+                false
+            ],
+            "/etc/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libcrypt-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libcrypt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_dns-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_dns.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libnss_files.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libresolv-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libresolv.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/librt-2.28.so": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/librt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libz.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/lib/x86_64-linux-gnu/libz.so.1.2.11": [
+                true,
+                false,
+                false
+            ],
+            "/proc/3/maps": [
+                true,
+                false,
+                false
+            ],
+            "/proc/4/maps": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/fd": [
+                true,
+                false,
+                false
+            ],
+            "/proc/self/maps": [
+                true,
+                false,
+                false
+            ],
+            "/root": [
+                true,
+                false,
+                false
+            ],
+            "/root/.config/gem/gemrc": [
+                true,
+                false,
+                false
+            ],
+            "/root/.gem": [
+                true,
+                false,
+                false
+            ],
+            "/root/.gem/specs": [
+                true,
+                false,
+                false
+            ],
+            "/root/.gemrc": [
+                true,
+                false,
+                false
+            ],
+            "/usr": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/ssl/cert.pem": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/ssl/certs/5dbe6f80.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/ssl/openssl.cnf": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libgmp.so.10": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libgmp.so.10.3.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libssl.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libyaml-0.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/lib/x86_64-linux-gnu/libyaml-0.so.2.0.5": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/analyze.rb": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/bundle": [
+                true,
+                true,
+                true
+            ],
+            "/usr/local/bin/gem": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/etc/gemrc": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libc.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libcrypt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libcrypto.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libdl.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libgmp.so.10": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libm.so.6": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libpthread.so.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/librt.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libruby.so.3.0.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libssl.so.1.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libyaml-0.so.2": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/libz.so.1": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/x86_64": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/tls/x86_64/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/x86_64": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/lib/x86_64/libruby.so.3.0": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/sbin/gem": [
+                true,
+                false,
+                false
+            ],
+            "/usr/share/zoneinfo/UCT": [
+                true,
+                false,
+                false
+            ],
+            "0x4b0f1d /{dev=10": [
+                true,
+                false,
+                false
+            ],
+            "Gemfile": [
+                true,
+                false,
+                false
+            ],
+            "Isolate": [
+                true,
+                false,
+                false
+            ],
+            "gem.deps.rb": [
+                true,
+                false,
+                false
+            ],
+            "gems.rb": [
+                true,
+                false,
+                false
+            ],
+            "host:[4]": [
+                true,
+                false,
+                false
+            ],
+            "host:[5]": [
+                true,
+                false,
+                false
+            ],
+            "host:[6]": [
+                true,
+                false,
+                false
+            ],
+            "pipe:[1]": [
+                true,
+                false,
+                false
+            ],
+            "pipe:[2]": [
+                true,
+                false,
+                false
+            ],
+            "socket:[7]": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/htmldiff": [
+                true,
+                true,
+                true
+            ],
+            "/usr/local/bin/ldiff": [
+                true,
+                true,
+                true
+            ],
+            "socket:[6]": [
+                true,
+                false,
+                false
+            ],
+            "/proc/sys/vm/overcommit_memory": [
+                true,
+                false,
+                false
+            ],
+            "/usr/local/bin/rspec": [
+                true,
+                true,
+                true
+            ]
+        },
+        "sockets": {
+            "151.101.1.227": 443,
+            "151.101.129.227": 443,
+            "151.101.193.227": 443,
+            "151.101.65.227": 443,
+            "2a04:4e42:200::483": 443,
+            "2a04:4e42:400::483": 443,
+            "2a04:4e42:600::483": 443,
+            "2a04:4e42::483": 443,
+            "8.8.8.8": 53
+        },
+        "dns": {
+            "index.rubygems.org": true
+        }
+    }
+}

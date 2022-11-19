@@ -1,0 +1,3 @@
+requests, pypi
+http-cookie, rubygems
+axios, npm

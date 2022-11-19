@@ -1,0 +1,23 @@
+name: "Build"
+
+on:
+  pull_request:
+
+permissions: read-all
+
+jobs:
+  Build:
+    name:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # v2.4.0
+    - uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f # v2.1.5
+      with:
+        go-version: '1.19.1'
+    - name: Install libpcap-dev
+      run: sudo apt-get install -y libpcap-dev
+    - run: go build -o scheduler cmd/scheduler/main.go
+    - run: go build -o worker cmd/worker/main.go
+    - run: go build -o analyze cmd/analyze/main.go
+    - run: go build -o loader load.go
+      working-directory: function/loader

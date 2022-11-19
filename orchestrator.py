@@ -4,22 +4,64 @@ import subprocess
 
 valid_registries = ['npm', 'pypi', 'rubygems']
 
-class package:
+class Package:
     def __init__(self, name, registry) -> None:
         self.name = name
         self.registry = registry
+        
+        self.candidates = {}
+        self.static_violations = {}
+        self.dynamic_violations = {}
+
+        self.analysis_output = {} # TODO
+
+    def stringify(self):
+        o = f'Name: {self.name}\n'
+        o += f'Registry: {self.registry}\n'
+
+        return o
+
+    def run_module_1(self):
+        print(f'[INFO] Running module 1 (candidate generator) for package: {self.name}')
+
+        result = subprocess.run(['./module-1/typogenerator/typogenerator', '-s', self.name, '-r', self.registry, '-j', '-v'], stdout=subprocess.PIPE)
+
+        candidates = result.stdout.decode('utf-8').splitlines()
+
+        self.candidates = json.loads(candidates[0])['results']
+
+    def run_module_3(self, original_package: str):
+        print(f'[INFO] Running module 3 (dynamic analyzer) for package: {self.name}')
+
+        result = subprocess.run(['sudo', 'python3', 'module-3.py', '-p', original_package, '-t', self.name, '-r', self.registry], stdout=subprocess.PIPE, cwd='./module-3')
+
+        self.dynamic_violations = result.stdout.decode('utf-8').splitlines()
+
+    def get_candidates(self):
+        return {'candidates': self.candidates}
+
+    def get_dynamic_violation(self):
+        return {'dynamic_violations': self.dynamic_violations}
+
+    def get_candidates_list(self):
+        candidates_list = []
+
+        for candidate in self.candidates:
+            candidates_list.append(candidate['candidate'][0]['name'])
+
+        return candidates_list
 
 def init():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', nargs='?', default='packages.txt', type=str)
+    parser.add_argument('-f', nargs='?', default='sample-packages.txt', type=str)
     args = parser.parse_args()
 
     return args
 
-def read_packages_from_file(file):
+def read_packages_from_file(file) -> list[Package]:
     package_list = []
     lines = []
-    
+
     try:
         with open(file) as f:
             lines = f.read().splitlines()
@@ -28,39 +70,30 @@ def read_packages_from_file(file):
 
     for line in lines:
         blocks = line.split(',')
-        
         if len(blocks) != 2 or blocks[1].strip() not in valid_registries:
             print(f'[ERROR] Invalid format, ignoring entry: {line}')
             continue
 
-        package_list.append(package(blocks[0], blocks[1].strip()))
+        package_list.append(Package(blocks[0], blocks[1].strip()))
 
     return package_list
 
-def run_module_1(package):
-    print(f'[INFO] Running module 1 (candidate generator) for package: {package.name}')
-
-    result = subprocess.run(['typogenerator/typogenerator', '-s', package.name, '-r', package.registry, '-p'], stdout=subprocess.PIPE)
-
-    candidates = result.stdout.decode('utf-8').splitlines()
-
-    return candidates
-
 def main(file):
     # read and parse packages from file
-    package_list = read_packages_from_file(file)
-    
+    packages = read_packages_from_file(file)
+
     module_1_json_list = {}
 
     # run module 1 for each package
-    for p in package_list:
-        candidates = run_module_1(p)
-        candidates = json.loads(candidates[0])
+    for original_package in packages:
+        original_package.run_module_1()
 
-        module_1_json_list[p.name] = candidates
+        for candidate in original_package.get_candidates_list():
+            candidate_package = Package(candidate, original_package.registry)
 
-    print(json.dumps(module_1_json_list, indent=4))
+            candidate_package.run_module_3(original_package.name)
+            print(candidate_package.get_dynamic_violation())
 
-if __name__=='__main__':
+if __name__ == '__main__':
     args = init()
     main(args.f)
