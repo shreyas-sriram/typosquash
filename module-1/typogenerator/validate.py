@@ -16,15 +16,19 @@ with open('dataset.csv') as csv_file:
         else:
             attacker = row[0]
             victim = row[1]
+            registry = row[2]
 
             if victim in dataset:
-                dataset[victim].append(attacker)
+                dataset[victim].append((attacker, registry))
             else:
-                dataset[victim] = [attacker]
+                dataset[victim] = [(attacker, registry)]
             # print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
         line_count += 1
+        # break
 
 dataset = dict(sorted(dataset.items()))
+
+# print(f'{dataset}')
 
 # print(json.dumps(dataset, indent=1))
 print(f'Found {len(dataset)} typosquatting victims from the dataset.')
@@ -34,10 +38,12 @@ print(f'Running candidate generator...')
 missed = 0
 missed_candidates_text = []
 
-for victim, attackers in dataset.items():
+for victim in dataset.keys():
+    # print(f'{dataset[victim][0]}')
+    _, registry = dataset[victim][0]
     start_time = datetime.now()
     
-    result = subprocess.run(['go', 'run', 'cmd/typogen/main.go', '-s', victim, '-p'], stdout=subprocess.PIPE)
+    result = subprocess.run(['go', 'run', 'cmd/typogen/main.go', '-s', victim, '-r', registry, '-p'], stdout=subprocess.PIPE)
 
     end_time = datetime.now()
 
@@ -45,7 +51,7 @@ for victim, attackers in dataset.items():
 
     candidates = result.stdout.decode('utf-8').splitlines()
 
-    for attacker in attackers:
+    for attacker, _ in dataset[victim]:
         if attacker not in candidates:
             missed += 1
             missed_candidates_text.append(f'Missed attacker: {attacker} for victim: {victim}')

@@ -18,7 +18,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -90,16 +89,7 @@ func main() {
 		log.Fatal("Unable to generate domains.")
 	}
 
-<<<<<<< HEAD:typogenerator/cmd/typogen/main.go
-	validPackages := typogenerator.GetValid(results)
-	outputJSON := struct {
-		Results []typogenerator.FuzzResult `json:"results"`
-	}{
-		Results: validPackages,
-	}
-=======
 	results = typogenerator.Clean(results, *input)
->>>>>>> main:module-1/typogenerator/cmd/typogen/main.go
 
 	outputJSON := struct {
 		Results []typogenerator.FuzzResult `json:"results"`
@@ -134,13 +124,12 @@ func main() {
 			}
 		}
 	} else {
-<<<<<<< HEAD:typogenerator/cmd/typogen/main.go
-		// for _, p := range validPackages {
-		// 	fmt.Println(p)
-		// }
-=======
->>>>>>> main:module-1/typogenerator/cmd/typogen/main.go
-		b, _ := json.Marshal(outputJSON)
-		fmt.Println(string(b))
+		for _, r := range results {
+			for _, p := range r.Permutations {
+				fmt.Println(p.Name)
+			}
+		}
+		// b, _ := json.Marshal(outputJSON)
+		// fmt.Println(string(b))
 	}
 }
