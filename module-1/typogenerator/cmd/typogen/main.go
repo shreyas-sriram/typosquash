@@ -38,6 +38,7 @@ var (
 	validateCandidates = flag.Bool("v", false, "Perform validation for generated candidates")
 )
 
+// init parses flags and validates
 func init() {
 	typogenerator.Registry = flag.String("r", "pypi", "Defines the package registry to search in (rubygems, pypi, npm)")
 
@@ -88,6 +89,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Unable to generate domains.")
 	}
+
+	results = typogenerator.Clean(results, *input)
 
 	outputJSON := struct {
 		Results []typogenerator.FuzzResult `json:"results"`

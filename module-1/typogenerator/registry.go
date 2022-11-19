@@ -32,21 +32,55 @@ var registryURL map[string]string = map[string]string{
 
 var Registry *string
 
-func Exists(packageName, registry string) bool {
-	URL := fmt.Sprintf(registryURL[registry], packageName)
+// normalize modifies and returns the name that conforms to naming conventions
+func normalize(name string) string {
+	switch *Registry {
+	case "pypi":
+		name = strings.ReplaceAll(name, ".", "-")
+		name = strings.ReplaceAll(name, "_", "-")
+		name = strings.ReplaceAll(name, "--", "-")
+	}
 
-	return exists(URL)
+	return name
 }
 
+// Clean removes the package name that resolve to similar names based on naming
+// conventions
+func Clean(results []FuzzResult, originalPackage string) []FuzzResult {
+	var cleanedResults []FuzzResult
+	seen := map[string]bool{originalPackage: true}
+
+	for _, result := range results {
+		cleanedPermutations := []Permutation{}
+		for _, permutation := range result.Permutations {
+			candidateName := permutation.Name
+
+			candidateName = normalize(candidateName)
+
+			_, ok := seen[candidateName]
+			if !ok {
+				permutation.Name = candidateName
+				cleanedPermutations = append(cleanedPermutations, permutation)
+				seen[candidateName] = true
+			}
+		}
+		result.Permutations = cleanedPermutations
+		cleanedResults = append(cleanedResults, result)
+	}
+
+	return cleanedResults
+}
+
+// GetValid returns a list of valid packages that exist in a registry
 func GetValid(results []FuzzResult) []FuzzResult {
 	validPackages := []FuzzResult{}
 
-	// rubygems API throttles requests, hence no concurrrency
-	// pypi and npm are good
+	// rubygems API throttles requests, hence no concurrrency.
+	// pypi and npm are good.
 	if *Registry == "rubygems" {
 		for _, r := range results {
 			for _, p := range r.Permutations {
-				if Exists(p.Name, *Registry) {
+				if exists(p.Name, *Registry) {
 					validPackages = append(validPackages, FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p.Name, true}}})
 				}
 			}
@@ -60,7 +94,7 @@ func GetValid(results []FuzzResult) []FuzzResult {
 			total += len(r.Permutations)
 			for _, p := range r.Permutations {
 				go func(p string, r FuzzResult) {
-					if Exists(p, *Registry) {
+					if exists(p, *Registry) {
 						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, true}}}
 					} else {
 						ch <- FuzzResult{StrategyName: r.StrategyName, Domain: r.Domain, Permutations: []Permutation{{p, false}}}
@@ -82,7 +116,15 @@ func GetValid(results []FuzzResult) []FuzzResult {
 	return validPackages
 }
 
-func exists(URL string) bool {
+// exists checks for existence of a package in a registry
+func exists(packageName, registry string) bool {
+	URL := fmt.Sprintf(registryURL[registry], packageName)
+
+	return makeRequest(URL)
+}
+
+// makeRequest makes a request to the given URL
+func makeRequest(URL string) bool {
 	resp, err := http.Get(URL)
 
 	if err != nil {
