@@ -32,7 +32,10 @@ class Package:
 
         self.ignore_list = FILE_IGNORE_LIST + [name]
 
-        os.system(f'sudo rm {self.results_dir}/*')
+        try:
+            os.system(f'sudo rm {self.results_dir}/*')
+        except:
+            pass
 
     def run_dynamic_analysis(self):
         # print(f'[INFO] Running dynamic analysis for package: {self.name}')
