@@ -9,7 +9,7 @@ FILE_IGNORE_LIST = [
     '.cache', 'site-packages', '__pycache__', '/tmp', 'python3.9', 'https://', # pypi
     '_cacache', 'node_modules', # npm
     '.local', '/usr/local/lib/ruby', # rubygems
-    'README', 'pipe:', 'MANIFEST', 'DESCRIPTION', # general
+    'README', 'pipe:', 'MANIFEST', 'DESCRIPTION', 'LICENSE', 'CONTRIBUTING', 'ABOUT', 'about', 'example', 'examples' # general
     ]
 
 class Package:
@@ -112,10 +112,11 @@ class Package:
 
         for el in new_sockets.difference(baseline_sockets):
             address, port = el
-            self.violated_sockets[address] = {
-                'port': port,
-                'command': command,
-            }
+            if address != '::1' and port != 0: # ignore this scenario
+                self.violated_sockets[address] = {
+                    'port': port,
+                    'command': command,
+                }
         
     def compare_dns(self, new, baseline, command):
         new_dns = set()
