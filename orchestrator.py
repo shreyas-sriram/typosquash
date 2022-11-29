@@ -66,8 +66,8 @@ class Package:
         _dynamic_violations = json.loads(self.dynamic_violations)
         
         _files = _dynamic_violations['files']
-        _dns = _dynamic_violations['sockets']
-        _sockets = _dynamic_violations['DNS']
+        _sockets = _dynamic_violations['sockets']
+        _dns = _dynamic_violations['DNS']
 
         self._evaluate_dynamic_violation_files(_files)
         self._evaluate_dynamic_violation_sockets(_sockets)
